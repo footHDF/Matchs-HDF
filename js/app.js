@@ -1,15 +1,11 @@
 let map;
 
-// Centre par défaut : Saint-Quentin
 let CENTER = { lat: 49.848, lon: 3.287 };
-
-// Rayon dynamique
 let RADIUS_KM = 60;
-
-// Week-end sélectionné (id = "YYYY-MM-DD" du samedi)
 let SELECTED_WEEKEND = null;
+let ACTIVE_COMPETITIONS = new Set();
 
-// ---------- Chargement données ----------
+// ---------- Chargement ----------
 async function loadMatches() {
   const res = await fetch("data/matches.json");
   const json = await res.json();
@@ -21,88 +17,69 @@ async function loadGeocodes() {
   return await res.json();
 }
 
-// ---------- Dates / week-ends ----------
+// ---------- Week-end ----------
 function weekendIdFromKickoff(iso) {
   const d = new Date(iso);
-  const day = d.getDay(); // 0=dim ... 6=sam
-
-  // On ramène au samedi du week-end du match
+  const day = d.getDay();
   const diff = (day === 0) ? -1 : (6 - day);
   const sat = new Date(d);
   sat.setDate(d.getDate() + diff);
-  sat.setHours(0, 0, 0, 0);
-
-  const y = sat.getFullYear();
-  const m = String(sat.getMonth() + 1).padStart(2, "0");
-  const da = String(sat.getDate()).padStart(2, "0");
-  return `${y}-${m}-${da}`;
+  sat.setHours(0,0,0,0);
+  return sat.toISOString().slice(0,10);
 }
 
 function labelWeekend(id) {
-  const [y, m, d] = id.split("-").map(Number);
-  const sat = new Date(y, m - 1, d);
-  const sun = new Date(y, m - 1, d + 1);
-
-  const fmt = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short" });
+  const [y,m,d] = id.split("-").map(Number);
+  const sat = new Date(y,m-1,d);
+  const sun = new Date(y,m-1,d+1);
+  const fmt = new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"short"});
   return `${fmt.format(sat)}–${fmt.format(sun)} ${y}`;
 }
 
 // ---------- Carte ----------
 function initMap() {
-  map = L.map("map").setView([CENTER.lat, CENTER.lon], 10);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap"
+  map = L.map("map").setView([CENTER.lat,CENTER.lon],10);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    attribution:"© OpenStreetMap"
   }).addTo(map);
 }
 
-function clearMarkers() {
-  map.eachLayer(layer => {
-    if (layer instanceof L.Marker) map.removeLayer(layer);
+function clearMarkers(){
+  map.eachLayer(l=>{
+    if(l instanceof L.Marker) map.removeLayer(l);
   });
 }
 
 // ---------- Affichage ----------
-function showMatches(matches) {
+function showMatches(matches){
+
   clearMarkers();
+  const list=document.getElementById("list");
+  list.innerHTML="";
 
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-
-  // 1) filtre week-end si sélectionné
-  const filteredByWeekend = SELECTED_WEEKEND
-    ? matches.filter(m => weekendIdFromKickoff(m.kickoff) === SELECTED_WEEKEND)
-    : matches;
-
-  // 2) calcul distance + filtre rayon + tri
-  const processed = filteredByWeekend
-    .map(match => {
-      const distance = haversineKm(
-        CENTER.lat, CENTER.lon,
-        match.venue.lat, match.venue.lon
-      );
-      return { match, distance };
+  const processed = matches
+    .filter(m=>!SELECTED_WEEKEND || weekendIdFromKickoff(m.kickoff)===SELECTED_WEEKEND)
+    .filter(m=>ACTIVE_COMPETITIONS.size===0 || ACTIVE_COMPETITIONS.has(m.competition))
+    .map(m=>{
+      const d=haversineKm(CENTER.lat,CENTER.lon,m.venue.lat,m.venue.lon);
+      return {m,d};
     })
-    .filter(obj => obj.distance <= RADIUS_KM)
-    .sort((a, b) => a.distance - b.distance);
+    .filter(o=>o.d<=RADIUS_KM)
+    .sort((a,b)=>a.d-b.d);
 
-  // 3) affichage
-  processed.forEach(obj => {
-    const m = obj.match;
-    const d = obj.distance;
+  processed.forEach(o=>{
+    const m=o.m;
+    const d=o.d;
 
-    L.marker([m.venue.lat, m.venue.lon])
+    L.marker([m.venue.lat,m.venue.lon])
       .addTo(map)
-      .bindPopup(
-        `<b>${m.home} vs ${m.away}</b><br>
-         ${m.venue.city}<br>
-         ${d.toFixed(1)} km`
-      );
+      .bindPopup(`<b>${m.home} vs ${m.away}</b><br>${m.competition}<br>${d.toFixed(1)} km`);
 
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
+    const div=document.createElement("div");
+    div.className="item";
+    div.innerHTML=`
       <b>${m.home}</b> vs <b>${m.away}</b><br>
+      ${m.competition}<br>
       ${m.venue.city}<br>
       Distance : <b>${d.toFixed(1)} km</b>
     `;
@@ -110,81 +87,87 @@ function showMatches(matches) {
   });
 }
 
-// ---------- UI bindings ----------
-function bindSearch(geocodes, matches) {
-  const input = document.getElementById("q");
-
-  input.addEventListener("input", () => {
-    const q = input.value.toLowerCase();
-
-    const found = geocodes.find(g =>
-      g.q.toLowerCase() === q ||
-      g.label.toLowerCase().includes(q)
-    );
-
-    if (!found) return;
-
-    CENTER = { lat: found.lat, lon: found.lon };
-    map.setView([CENTER.lat, CENTER.lon], 10);
-
+// ---------- UI ----------
+function bindSearch(geocodes,matches){
+  document.getElementById("q").addEventListener("input",e=>{
+    const q=e.target.value.toLowerCase();
+    const f=geocodes.find(g=>g.q.toLowerCase()===q||g.label.toLowerCase().includes(q));
+    if(!f) return;
+    CENTER={lat:f.lat,lon:f.lon};
+    map.setView([CENTER.lat,CENTER.lon],10);
     showMatches(matches);
   });
 }
 
-function bindRadius(matches) {
-  const slider = document.getElementById("radius");
-  const label = document.getElementById("radiusValue");
-
-  RADIUS_KM = Number(slider.value);
-  label.textContent = slider.value;
-
-  slider.addEventListener("input", () => {
-    RADIUS_KM = Number(slider.value);
-    label.textContent = slider.value;
+function bindRadius(matches){
+  const s=document.getElementById("radius");
+  const l=document.getElementById("radiusValue");
+  RADIUS_KM=Number(s.value);
+  l.textContent=s.value;
+  s.addEventListener("input",()=>{
+    RADIUS_KM=Number(s.value);
+    l.textContent=s.value;
     showMatches(matches);
   });
 }
 
-function buildWeekendSelect(matches) {
-  const select = document.getElementById("weekend");
-
-  const ids = Array.from(new Set(matches.map(m => weekendIdFromKickoff(m.kickoff))))
-    .sort((a, b) => a.localeCompare(b));
-
-  select.innerHTML = "";
-  ids.forEach(id => {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = labelWeekend(id);
-    select.appendChild(opt);
+function buildWeekendSelect(matches){
+  const sel=document.getElementById("weekend");
+  const ids=[...new Set(matches.map(m=>weekendIdFromKickoff(m.kickoff)))].sort();
+  ids.forEach(id=>{
+    const o=document.createElement("option");
+    o.value=id;
+    o.textContent=labelWeekend(id);
+    sel.appendChild(o);
   });
-
-  // par défaut : le premier week-end disponible
-  SELECTED_WEEKEND = ids[0] || null;
-  if (SELECTED_WEEKEND) select.value = SELECTED_WEEKEND;
+  SELECTED_WEEKEND=ids[0];
 }
 
-function bindWeekend(matches) {
-  const select = document.getElementById("weekend");
-  select.addEventListener("change", () => {
-    SELECTED_WEEKEND = select.value;
+function bindWeekend(matches){
+  document.getElementById("weekend").addEventListener("change",e=>{
+    SELECTED_WEEKEND=e.target.value;
     showMatches(matches);
+  });
+}
+
+function buildCompetitionChips(matches){
+  const wrap=document.getElementById("competitions");
+  const comps=[...new Set(matches.map(m=>m.competition))];
+
+  comps.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip";
+    b.textContent=c;
+
+    b.onclick=()=>{
+      if(ACTIVE_COMPETITIONS.has(c)){
+        ACTIVE_COMPETITIONS.delete(c);
+        b.classList.remove("on");
+      }else{
+        ACTIVE_COMPETITIONS.add(c);
+        b.classList.add("on");
+      }
+      showMatches(matches);
+    };
+
+    wrap.appendChild(b);
   });
 }
 
 // ---------- Start ----------
-async function start() {
+async function start(){
   initMap();
-
-  const matches = await loadMatches();
-  const geocodes = await loadGeocodes();
+  const matches=await loadMatches();
+  const geocodes=await loadGeocodes();
 
   buildWeekendSelect(matches);
+  buildCompetitionChips(matches);
 
   showMatches(matches);
-  bindSearch(geocodes, matches);
+
+  bindSearch(geocodes,matches);
   bindRadius(matches);
   bindWeekend(matches);
 }
 
-document.addEventListener("DOMContentLoaded", start);
+document.addEventListener("DOMContentLoaded",start);
