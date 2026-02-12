@@ -6,6 +6,7 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES_PATH = ROOT / "scripts" / "sources_r1r3.json"
 CLUBS_PATH = ROOT / "data" / "club_locations.json"
@@ -14,272 +15,141 @@ OUT_MATCHES = ROOT / "data" / "matches.json"
 OUT_MISSING = ROOT / "data" / "missing_clubs.json"
 OUT_LAST = ROOT / "data" / "last_update.json"
 
-USER_AGENT = "Matchs-HDF bot (GitHub Actions) - contact: actions@users.noreply.github.com"
 
-# Ex: "sam 07 fév 2026 - 18h00" / parfois "sam 07 fev 2026 - 18h00"
 DATE_RE = re.compile(
-    r"(lun|mar|mer|jeu|ven|sam|dim)\s+(\d{1,2})\s+([a-zéèêëîïôöûüàç\.]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})h(\d{2})",
+    r"(lun|mar|mer|jeu|ven|sam|dim)\s+(\d{1,2})\s+([a-zéèêëîïôöûüàç]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})h(\d{2})",
     re.IGNORECASE
-)
-
 )
 
 MONTHS = {
     "jan": 1, "janv": 1,
-    "fev": 2, "fév": 2, "fevr": 2, "févr": 2,
+    "fev": 2, "fév": 2,
     "mar": 3, "mars": 3,
-    "avr": 4, "avri": 4,
+    "avr": 4,
     "mai": 5,
     "jui": 6, "juin": 6,
-    "juil": 7, "jui.": 7,
-    "aou": 8, "aoû": 8, "aout": 8, "août": 8,
-    "sep": 9, "sept": 9,
+    "juil": 7,
+    "aou": 8, "aoû": 8, "aout": 8,
+    "sep": 9,
     "oct": 10,
     "nov": 11,
     "dec": 12, "déc": 12
 }
 
-def norm(s: str) -> str:
-    """
-    Normalisation très tolérante pour matcher les noms entre epreuves et club_locations.
-    - supprime accents/ponctuation usuels
-    - supprime espaces (donc "USL2" == "USL 2")
-    - enlève les mentions "Forfait ..." qui apparaissent parfois
-    """
-    s = (s or "").upper().strip()
-    s = s.replace("\u00A0", " ")  # nbsp
-    # retire mentions forfait
-    s = re.sub(r"\bFORFAIT\b.*$", "", s).strip()
 
-    # uniformise apostrophes et ponctuation en espaces
-    s = re.sub(r"[’']", " ", s)
-    s = re.sub(r"[\.\-_/]", " ", s)
-
-    # compacte espaces
-    s = re.sub(r"\s+", " ", s).strip()
-
-    # supprime tous les espaces pour tolérer "USL2" vs "USL 2"
-    s = s.replace(" ", "")
-
-    return s
+def norm(s):
+    s = (s or "").upper()
+    s = re.sub(r"[’'\.\-_/]", " ", s)
+    s = re.sub(r"\s+", " ", s)
+    return s.strip().replace(" ", "")
 
 
-def fr_date_line_to_iso(line: str) -> str | None:
-    # Normalise les tirets / espaces spéciaux
-    s = (line or "").replace("\u00A0", " ").replace("–", "-").strip()
-
-    m = DATE_RE.search(s)
+def fr_to_iso(line):
+    line = line.replace("–", "-")
+    m = DATE_RE.search(line)
     if not m:
         return None
 
-    _, dd, mon, yyyy, hh, mm = m.groups()
-    mon = mon.lower().replace(".", "")
+    _, d, mon, y, h, mn = m.groups()
+    mon = mon.lower()
 
-    key4 = mon[:4]
-    key3 = mon[:3]
-    month = MONTHS.get(key4) or MONTHS.get(key3)
+    month = MONTHS.get(mon[:4]) or MONTHS.get(mon[:3])
     if not month:
         return None
 
-    dt = datetime(int(yyyy), int(month), int(dd), int(hh), int(mm))
+    dt = datetime(int(y), month, int(d), int(h), int(mn))
     return dt.strftime("%Y-%m-%dT%H:%M:00+01:00")
 
 
-def fetch_text_lines(url: str) -> list[str]:
-    r = requests.get(url, timeout=45, headers={"User-Agent": USER_AGENT})
+def fetch_lines(url):
+    r = requests.get(url, timeout=40)
     r.raise_for_status()
     soup = BeautifulSoup(r.text, "html.parser")
+    txt = soup.get_text("\n")
+    return [x.strip() for x in txt.split("\n") if x.strip()]
 
-    # On récupère du texte “plat” (robuste aux changements de structure)
-    text = soup.get_text("\n")
-    lines = [ln.strip() for ln in text.split("\n")]
-    return [ln for ln in lines if ln]
 
-def is_score_line(s: str) -> bool:
-    s = (s or "").strip()
-    if s in {"-", " - "}:
-        return True
-    return bool(re.match(r"^\d+\s+\d+$", s))
-
-def is_ui_noise(s: str) -> bool:
-    u = (s or "").upper()
-    bad = [
-        "NAVIGATION", "SEMAINE", "CHOISISSEZ", "POULE", "LES MATCHS",
-        "CLASSEMENT", "SAISON", "RECHERCHE", "MES FAVORIS"
-    ]
-    return any(x in u for x in bad)
-
-def parse_matches(lines: list[str], competition_code: str, source_url: str) -> list[dict]:
-    """
-    Parsing robuste :
-    - repère une date/heure dans une ligne (DATE_RE.search)
-    - scanne les lignes suivantes pour trouver 2 clubs (home/away),
-      en ignorant scores et bruit UI.
-    """
-    out = []
+def parse(lines, comp, url):
+    matches = []
     i = 0
+
     while i < len(lines):
-        iso = fr_date_line_to_iso(lines[i])
+        iso = fr_to_iso(lines[i])
         if not iso:
             i += 1
             continue
 
-        # Cherche les 2 équipes dans les 12 lignes suivantes
         clubs = []
-        for j in range(i + 1, min(i + 13, len(lines))):
-            t = (lines[j] or "").strip()
-            if not t or is_ui_noise(t):
-                continue
-            if fr_date_line_to_iso(t):  # une autre date => stop
+
+        for j in range(i+1, min(i+12, len(lines))):
+            t = lines[j]
+
+            if fr_to_iso(t):
                 break
-            if is_score_line(t):
+
+            if re.match(r"^\d+\s+\d+$", t):
                 continue
-            # on garde les lignes "club"
+
+            if len(t) < 3:
+                continue
+
             clubs.append(t)
             if len(clubs) == 2:
                 break
 
         if len(clubs) == 2:
-            home, away = clubs
-            out.append({
-                "competition": competition_code,
-                "competition_label": competition_code,
+            matches.append({
+                "competition": comp,
+                "competition_label": comp,
                 "kickoff": iso,
-                "home": home,
-                "away": away,
-                "source": "FFF/EPREUVES",
-                "source_url": source_url
+                "home": clubs[0],
+                "away": clubs[1],
+                "source_url": url
             })
 
         i += 1
 
-    return out
+    return matches
 
-    """
-    Parsing robuste :
-    - repère une ligne date
-    - prend home = ligne suivante
-    - saute éventuellement score/infos
-    - prend away = ligne 3 après (souvent)
-    """
-    out = []
-    i = 0
-    while i < len(lines):
-        iso = fr_date_line_to_iso(lines[i])
-        if not iso:
-            i += 1
-            continue
-
-        home = lines[i + 1] if i + 1 < len(lines) else ""
-        mid  = lines[i + 2] if i + 2 < len(lines) else ""
-        away = lines[i + 3] if i + 3 < len(lines) else ""
-
-        # Heuristique : parfois (home, away) sont collés autrement ; on fait un mini fallback
-        if not home or not away:
-            i += 1
-            continue
-
-        # Filtre anti-bruit : éviter de capturer des titres
-        if len(home) < 3 or len(away) < 3:
-            i += 1
-            continue
-
-        out.append({
-            "competition": competition_code,
-            "competition_label": competition_code,
-            "kickoff": iso,
-            "home": home,
-            "away": away,
-            "source": "FFF/EPREUVES",
-            "source_url": source_url
-        })
-        i += 1
-    return out
-
-def load_json(path: Path, default):
-    if not path.exists():
-        return default
-    return json.loads(path.read_text(encoding="utf-8"))
 
 def main():
-    sources = load_json(SOURCES_PATH, {})
-    clubs = load_json(CLUBS_PATH, {})
-        
-    # Sécurité: si aucune URL n'est chargée, on stoppe (sinon on écrase tout avec du vide)
-    all_urls = []
-    for comp, urls in sources.items():
-        all_urls.extend([u for u in (urls or []) if u and "COLLE_URL" not in u])
 
-    if not all_urls:
-        raise SystemExit(
-            f"Aucune URL source chargée. Vérifie {SOURCES_PATH} (chemin + contenu)."
-        )
+    sources = json.loads(SOURCES_PATH.read_text())
+    clubs = json.loads(CLUBS_PATH.read_text())
 
-    # index normalisé -> entrée
-    clubs_norm = {norm(name): (name, data) for name, data in clubs.items()}
+    clubs_norm = {norm(k): v for k, v in clubs.items()}
 
-    raw_matches = []
+    raw = []
+
     for comp, urls in sources.items():
         for url in urls:
-            if not url or "COLLE_URL" in url:
+            if not url:
                 continue
-            lines = fetch_text_lines(url)
-            raw_matches.extend(parse_matches(lines, comp, url))
+            lines = fetch_lines(url)
+            raw += parse(lines, comp, url)
 
-    # Dédoublonnage
-    uniq = {}
-    for m in raw_matches:
-        key = (m["competition"], m["kickoff"], norm(m["home"]), norm(m["away"]))
-        uniq[key] = m
-    raw_matches = list(uniq.values())
-
-    enriched = []
     missing = set()
+    enriched = []
 
-    for m in raw_matches:
-        home_key = norm(m["home"])
-        found = clubs_norm.get(home_key)
-
-        if not found:
-            # club domicile inconnu => on le note, on n’inclut pas le match dans matches.json (sinon ta carte casse)
+    for m in raw:
+        key = norm(m["home"])
+        if key not in clubs_norm:
             missing.add(m["home"])
             continue
 
-        _, loc = found
-        venue = {
-            "name": "",
-            "city": loc.get("city", ""),
-            "postcode": loc.get("postcode", ""),
-            "lat": float(loc["lat"]),
-            "lon": float(loc["lon"])
+        loc = clubs_norm[key]
+
+        m["venue"] = {
+            "city": loc["city"],
+            "lat": loc["lat"],
+            "lon": loc["lon"]
         }
+        enriched.append(m)
 
-        enriched.append({
-            "id": f'{m["competition"]}_{m["kickoff"]}_{norm(m["home"])}_{norm(m["away"])}',
-            **m,
-            "venue": venue
-        })
+    OUT_MATCHES.write_text(json.dumps({"season": "auto", "matches": enriched}, indent=2, ensure_ascii=False))
+    OUT_MISSING.write_text(json.dumps(sorted(missing), indent=2, ensure_ascii=False))
+    OUT_LAST.write_text(json.dumps({"last_update": datetime.now().isoformat()}, indent=2))
 
-    # Tri par date
-    enriched.sort(key=lambda x: x["kickoff"])
-
-    OUT_MATCHES.write_text(
-        json.dumps({"season": "auto", "matches": enriched}, ensure_ascii=False, indent=2),
-        encoding="utf-8"
-    )
-
-    OUT_MISSING.write_text(
-        json.dumps(sorted(missing), ensure_ascii=False, indent=2),
-        encoding="utf-8"
-    )
-
-    OUT_LAST.write_text(
-        json.dumps({"last_update": datetime.now().strftime("%Y-%m-%d %H:%M")}, ensure_ascii=False, indent=2),
-        encoding="utf-8"
-    )
-
-    print(f"OK: {len(enriched)} matchs écrits dans data/matches.json")
-    print(f"INFO: {len(missing)} clubs manquants listés dans data/missing_clubs.json")
 
 if __name__ == "__main__":
     main()
