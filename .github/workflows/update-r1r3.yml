@@ -1,0 +1,41 @@
+name: Update R1/R2/R3 (HDF)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Tous les vendredis à 05:30 UTC (~06:30 Paris en hiver)
+    - cron: "30 5 * * 5"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Build data/matches.json
+        run: |
+          python scripts/update_r1r3.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "matchs-hdf-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/matches.json data/missing_clubs.json data/last_update.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "data: update R1/R2/R3"
+            git push
+          fi
