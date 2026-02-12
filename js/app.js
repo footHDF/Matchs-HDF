@@ -6,7 +6,7 @@ let CENTER = {
   lon: 3.287
 };
 
-const RADIUS_KM = 60;
+let RADIUS_KM = 60;
 
 // ---------- Chargement données ----------
 
@@ -120,6 +120,22 @@ async function start() {
 
   showMatches(matches);
   bindSearch(geocodes, matches);
+  bindRadius(matches);
+  function bindRadius(matches) {
+
+  const slider = document.getElementById("radius");
+  const label = document.getElementById("radiusValue");
+
+  label.textContent = slider.value;
+
+  slider.addEventListener("input", () => {
+    RADIUS_KM = Number(slider.value);
+    label.textContent = slider.value;
+
+    showMatches(matches);
+  });
+}
+
 }
 
 document.addEventListener("DOMContentLoaded", start);
