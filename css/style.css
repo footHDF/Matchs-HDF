@@ -6,8 +6,8 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
 
 .layout { display: grid; grid-template-columns: 420px 1fr; height: calc(100vh - 62px); }
 .panel { padding: 12px; overflow: auto; border-right: 1px solid #eee; }
-.mapWrap { position: relative; }
-#map { position: absolute; inset: 0; }
+.mapWrap { height: 100%; }
+#map { height: 100%; width: 100%; }
 
 .row { display: grid; gap: 8px; margin-bottom: 10px; }
 .row label { font-size: 13px; color: #444; }
