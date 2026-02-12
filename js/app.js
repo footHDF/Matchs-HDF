@@ -60,6 +60,7 @@ function clearMarkers(){
 function showMatches(matches){
 
   clearMarkers();
+  const bounds = [];
   const list=document.getElementById("list");
   list.innerHTML="";
 
@@ -74,6 +75,7 @@ function showMatches(matches){
     .sort((a,b)=>a.d-b.d);
 
   processed.forEach(o=>{
+    bounds.push([m.venue.lat, m.venue.lon]);
     const m=o.m;
     const d=o.d;
 
@@ -170,7 +172,11 @@ function buildCompetitionChips(matches){
 
     wrap.appendChild(b);
   });
+// ⭐ Auto-zoom sur les résultats
+if (bounds.length > 0) {
+  map.fitBounds(bounds, { padding: [40, 40] });
 }
+
 
 
 // ---------- Start ----------
