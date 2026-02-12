@@ -32,7 +32,8 @@ jobs:
         run: |
           git config user.name "matchs-hdf-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/matches.json data/missing_clubs.json data/last_update.json
+          git add data/matches.json data/missing_clubs.json data/last_update.json data/debug_home_clubs.json
+
           if git diff --cached --quiet; then
             echo "No changes"
           else
