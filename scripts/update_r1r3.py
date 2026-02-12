@@ -38,13 +38,29 @@ MONTHS = {
 }
 
 def norm(s: str) -> str:
-    """Normalisation tolérante pour matcher les noms de clubs malgré variations."""
+    """
+    Normalisation très tolérante pour matcher les noms entre epreuves et club_locations.
+    - supprime accents/ponctuation usuels
+    - supprime espaces (donc "USL2" == "USL 2")
+    - enlève les mentions "Forfait ..." qui apparaissent parfois
+    """
     s = (s or "").upper().strip()
     s = s.replace("\u00A0", " ")  # nbsp
+    # retire mentions forfait
+    s = re.sub(r"\bFORFAIT\b.*$", "", s).strip()
+
+    # uniformise apostrophes et ponctuation en espaces
     s = re.sub(r"[’']", " ", s)
     s = re.sub(r"[\.\-_/]", " ", s)
+
+    # compacte espaces
     s = re.sub(r"\s+", " ", s).strip()
+
+    # supprime tous les espaces pour tolérer "USL2" vs "USL 2"
+    s = s.replace(" ", "")
+
     return s
+
 
 def fr_date_line_to_iso(line: str) -> str | None:
     m = DATE_RE.match(line.strip())
