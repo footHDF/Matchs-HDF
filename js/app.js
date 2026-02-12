@@ -20,6 +20,42 @@ let currentMarkers = [];
 const el = (id) => document.getElementById(id);
 const setStatus = (msg) => (el("status").textContent = msg);
 
+function escapeHtml(s) {
+  return String(s || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function formatKickoff(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("fr-FR", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+// ✅ Version CORRIGÉE : dimanche => samedi veille
+function weekendFromKickoffIso(iso) {
+  const d = new Date(iso);
+  const day = d.getDay(); // 0=dim ... 6=sam
+  const diff = (day === 0) ? -1 : (6 - day);
+
+  const sat = new Date(d);
+  sat.setDate(d.getDate() + diff);
+  sat.setHours(0, 0, 0, 0);
+
+  const y = sat.getFullYear();
+  const m = String(sat.getMonth() + 1).padStart(2, "0");
+  const da = String(sat.getDate()).padStart(2, "0");
+  return `${y}-${m}-${da}`;
+}
+
 function buildChips() {
   const wrap = el("chips");
   wrap.innerHTML = "";
@@ -51,18 +87,6 @@ function clearMarkers() {
   currentMarkers = [];
 }
 
-function addMarker(match, idx) {
-  const m = L.marker([match.venue.lat, match.venue.lon]).addTo(markerLayer);
-  m.bindPopup(`
-    <b>${match.competition_label || match.competition}</b><br/>
-    ${formatKickoff(match.kickoff)}<br/>
-    ${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br/>
-    ${escapeHtml(match.venue.city)} (${match.distance_km.toFixed(1)} km)
-  `);
-  m.on("click", () => focusListItem(idx));
-  currentMarkers.push(m);
-}
-
 function focusListItem(idx) {
   const node = document.querySelector(`[data-idx="${idx}"]`);
   if (!node) return;
@@ -71,51 +95,29 @@ function focusListItem(idx) {
   node.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
-function escapeHtml(s) {
-  return String(s || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function addMarker(match, idx) {
+  const m = L.marker([match.venue.lat, match.venue.lon]).addTo(markerLayer);
+  m.bindPopup(`
+    <b>${escapeHtml(match.competition_label || match.competition)}</b><br/>
+    ${escapeHtml(formatKickoff(match.kickoff))}<br/>
+    ${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br/>
+    ${escapeHtml(match.venue.city)} (${match.distance_km.toFixed(1)} km)
+  `);
+  m.on("click", () => focusListItem(idx));
+  currentMarkers.push(m);
 }
 
 function resolveQuery(q) {
   q = (q || "").trim().toLowerCase();
   if (!q) return null;
 
-  // match exact CP
   const byCp = geocodes.find(g => (g.q || "").toLowerCase() === q);
   if (byCp) return byCp;
 
-  // match label contains (ville)
   const byCity = geocodes.find(g => (g.label || "").toLowerCase().includes(q));
   if (byCity) return byCity;
 
   return null;
-}
-
-function weekendFromKickoffIso(iso) {
-  const d = new Date(iso);
-  const day = d.getDay(); // 0=dim ... 6=sam
-
-  // On veut le samedi du week-end DU MATCH :
-  // - dimanche (0) => samedi veille (-1)
-  // - samedi (6) => 0
-  // - lundi (1) => +5 etc.
-  const diff = (day === 0) ? -1 : (6 - day);
-
-  const sat = new Date(d);
-  sat.setDate(d.getDate() + diff);
-  sat.setHours(0, 0, 0, 0);
-
-  const y = sat.getFullYear();
-  const m = String(sat.getMonth() + 1).padStart(2, "0");
-  const da = String(sat.getDate()).padStart(2, "0");
-  return `${y}-${m}-${da}`;
-}
-
-
 }
 
 function buildWeekendSelect() {
@@ -136,23 +138,11 @@ function buildWeekendSelect() {
   else if (ids.length) select.value = ids[0];
 }
 
-function formatKickoff(iso) {
-  const d = new Date(iso);
-  return d.toLocaleString("fr-FR", {
-    weekday: "short",
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
 function renderList(matches, center) {
   const list = el("list");
   list.innerHTML = "";
 
   matches.forEach((m, idx) => {
-    const kickoff = formatKickoff(m.kickoff);
     const gmaps = `https://www.google.com/maps/dir/?api=1&destination=${m.venue.lat},${m.venue.lon}&origin=${center.lat},${center.lon}`;
 
     const item = document.createElement("div");
@@ -162,7 +152,7 @@ function renderList(matches, center) {
     item.innerHTML = `
       <div class="line1">
         <span class="badge">${escapeHtml(m.competition)}</span>
-        <span class="kickoff">${escapeHtml(kickoff)}</span>
+        <span class="kickoff">${escapeHtml(formatKickoff(m.kickoff))}</span>
         <span class="dist">${m.distance_km.toFixed(1)} km</span>
       </div>
       <div class="line2"><b>${escapeHtml(m.home)}</b> vs <b>${escapeHtml(m.away)}</b></div>
@@ -266,3 +256,4 @@ function bindUI() {
   bindUI();
   runSearch();
 })();
+
