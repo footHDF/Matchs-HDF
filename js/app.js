@@ -49,40 +49,50 @@ function showMatches(matches) {
   const list = document.getElementById("list");
   list.innerHTML = "";
 
-  matches.forEach(match => {
+  // ⭐ calcul + tri distance
+  const processed = matches
+    .map(match => {
 
-    const distance = haversineKm(
-      CENTER.lat,
-      CENTER.lon,
-      match.venue.lat,
-      match.venue.lon
-    );
-
-    // ⭐ filtre rayon
-    if (distance > RADIUS_KM) return;
-
-    // ⭐ marqueur carte
-    L.marker([match.venue.lat, match.venue.lon])
-      .addTo(map)
-      .bindPopup(
-        `<b>${match.home} vs ${match.away}</b><br>
-         ${match.venue.city}<br>
-         ${distance.toFixed(1)} km`
+      const distance = haversineKm(
+        CENTER.lat,
+        CENTER.lon,
+        match.venue.lat,
+        match.venue.lon
       );
 
-    // ⭐ liste gauche
+      return { match, distance };
+
+    })
+    .filter(obj => obj.distance <= RADIUS_KM)
+    .sort((a, b) => a.distance - b.distance);
+
+  // ⭐ affichage
+  processed.forEach(obj => {
+
+    const m = obj.match;
+    const d = obj.distance;
+
+    L.marker([m.venue.lat, m.venue.lon])
+      .addTo(map)
+      .bindPopup(
+        `<b>${m.home} vs ${m.away}</b><br>
+         ${m.venue.city}<br>
+         ${d.toFixed(1)} km`
+      );
+
     const div = document.createElement("div");
     div.className = "item";
 
     div.innerHTML = `
-      <b>${match.home}</b> vs <b>${match.away}</b><br>
-      ${match.venue.city}<br>
-      Distance : <b>${distance.toFixed(1)} km</b>
+      <b>${m.home}</b> vs <b>${m.away}</b><br>
+      ${m.venue.city}<br>
+      Distance : <b>${d.toFixed(1)} km</b>
     `;
 
     list.appendChild(div);
   });
 }
+
 
 // ---------- Recherche utilisateur ----------
 
