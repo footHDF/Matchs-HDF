@@ -32,6 +32,10 @@ function showMatches(matches) {
       match.venue.lon
     );
 
+    // ⭐ FILTRE RAYON 60 km
+    if (distance > 60) return;
+
+
     L.marker([match.venue.lat, match.venue.lon])
       .addTo(map)
       .bindPopup(
