@@ -138,6 +138,16 @@ def load_json(path: Path, default):
 def main():
     sources = load_json(SOURCES_PATH, {})
     clubs = load_json(CLUBS_PATH, {})
+        
+    # Sécurité: si aucune URL n'est chargée, on stoppe (sinon on écrase tout avec du vide)
+    all_urls = []
+    for comp, urls in sources.items():
+        all_urls.extend([u for u in (urls or []) if u and "COLLE_URL" not in u])
+
+    if not all_urls:
+        raise SystemExit(
+            f"Aucune URL source chargée. Vérifie {SOURCES_PATH} (chemin + contenu)."
+        )
 
     # index normalisé -> entrée
     clubs_norm = {norm(name): (name, data) for name, data in clubs.items()}
