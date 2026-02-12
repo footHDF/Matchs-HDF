@@ -13,10 +13,12 @@ const COMPETITIONS = [
 let allMatches = [];
 let geocodes = [];
 let activeCompetitions = new Set(COMPETITIONS.map(c => c.code));
-let map, markerLayer, markers = [];
 
-const el = id => document.getElementById(id);
-const setStatus = msg => el("status").textContent = msg;
+let map, markerLayer;
+let currentMarkers = [];
+
+const el = (id) => document.getElementById(id);
+const setStatus = (msg) => (el("status").textContent = msg);
 
 function buildChips() {
   const wrap = el("chips");
@@ -26,10 +28,8 @@ function buildChips() {
     b.className = activeCompetitions.has(c.code) ? "chip on" : "chip";
     b.textContent = c.label;
     b.onclick = () => {
-      if (activeCompetitions.has(c.code))
-        activeCompetitions.delete(c.code);
-      else
-        activeCompetitions.add(c.code);
+      if (activeCompetitions.has(c.code)) activeCompetitions.delete(c.code);
+      else activeCompetitions.add(c.code);
       buildChips();
       runSearch();
     };
@@ -40,6 +40,7 @@ function buildChips() {
 function initMap() {
   map = L.map("map").setView([50.2, 2.9], 8);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
     attribution: "&copy; OpenStreetMap"
   }).addTo(map);
   markerLayer = L.layerGroup().addTo(map);
@@ -47,107 +48,212 @@ function initMap() {
 
 function clearMarkers() {
   markerLayer.clearLayers();
-  markers = [];
+  currentMarkers = [];
 }
 
 function addMarker(match, idx) {
   const m = L.marker([match.venue.lat, match.venue.lon]).addTo(markerLayer);
   m.bindPopup(`
-    <b>${match.competition}</b><br>
-    ${match.home} - ${match.away}<br>
-    ${match.venue.city}
+    <b>${match.competition_label || match.competition}</b><br/>
+    ${formatKickoff(match.kickoff)}<br/>
+    ${escapeHtml(match.home)} - ${escapeHtml(match.away)}<br/>
+    ${escapeHtml(match.venue.city)} (${match.distance_km.toFixed(1)} km)
   `);
-  markers.push(m);
+  m.on("click", () => focusListItem(idx));
+  currentMarkers.push(m);
+}
+
+function focusListItem(idx) {
+  const node = document.querySelector(`[data-idx="${idx}"]`);
+  if (!node) return;
+  document.querySelectorAll(".item").forEach(x => x.classList.remove("active"));
+  node.classList.add("active");
+  node.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function escapeHtml(s) {
+  return String(s || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function resolveQuery(q) {
-  q = (q || "").toLowerCase().trim();
-  return geocodes.find(g =>
-    g.q.toLowerCase() === q ||
-    g.label.toLowerCase().includes(q)
-  );
+  q = (q || "").trim().toLowerCase();
+  if (!q) return null;
+
+  // match exact CP
+  const byCp = geocodes.find(g => (g.q || "").toLowerCase() === q);
+  if (byCp) return byCp;
+
+  // match label contains (ville)
+  const byCity = geocodes.find(g => (g.label || "").toLowerCase().includes(q));
+  if (byCity) return byCity;
+
+  return null;
 }
 
-function weekendFromKickoff(iso) {
+function weekendFromKickoffIso(iso) {
   const d = new Date(iso);
-  const day = d.getDay();
-  const offset = (6 - day + 7) % 7;
+  const day = d.getDay(); // 0=dim, 6=sam
+  const offsetToSat = (6 - day + 7) % 7;
   const sat = new Date(d);
-  sat.setDate(d.getDate() + offset);
+  sat.setDate(d.getDate() + offsetToSat);
   sat.setHours(0,0,0,0);
-  return sat.toISOString().slice(0,10);
+
+  const y = sat.getFullYear();
+  const m = String(sat.getMonth()+1).padStart(2,'0');
+  const da = String(sat.getDate()).padStart(2,'0');
+  return `${y}-${m}-${da}`;
 }
 
 function buildWeekendSelect() {
-  const ids = [...new Set(allMatches.map(m => weekendFromKickoff(m.kickoff)))];
-  const sel = el("weekendSelect");
-  sel.innerHTML = "";
-  ids.forEach(id=>{
-    const o=document.createElement("option");
-    o.value=id;
-    o.textContent=id;
-    sel.appendChild(o);
+  const select = el("weekendSelect");
+  const ids = Array.from(new Set(allMatches.map(m => weekendFromKickoffIso(m.kickoff))))
+    .sort((a,b) => a.localeCompare(b));
+
+  select.innerHTML = "";
+  ids.forEach(id => {
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = labelWeekend(id);
+    select.appendChild(opt);
+  });
+
+  const next = weekendIdFromDate(new Date());
+  if (ids.includes(next)) select.value = next;
+  else if (ids.length) select.value = ids[0];
+}
+
+function formatKickoff(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("fr-FR", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
   });
 }
 
-function renderList(matches) {
+function renderList(matches, center) {
   const list = el("list");
   list.innerHTML = "";
-  matches.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.innerHTML=`
-      <div><b>${m.home}</b> vs <b>${m.away}</b></div>
-      <div>${m.venue.city} — ${m.distance.toFixed(1)} km</div>
+
+  matches.forEach((m, idx) => {
+    const kickoff = formatKickoff(m.kickoff);
+    const gmaps = `https://www.google.com/maps/dir/?api=1&destination=${m.venue.lat},${m.venue.lon}&origin=${center.lat},${center.lon}`;
+
+    const item = document.createElement("div");
+    item.className = "item";
+    item.dataset.idx = String(idx);
+
+    item.innerHTML = `
+      <div class="line1">
+        <span class="badge">${escapeHtml(m.competition)}</span>
+        <span class="kickoff">${escapeHtml(kickoff)}</span>
+        <span class="dist">${m.distance_km.toFixed(1)} km</span>
+      </div>
+      <div class="line2"><b>${escapeHtml(m.home)}</b> vs <b>${escapeHtml(m.away)}</b></div>
+      <div class="line3">${escapeHtml(m.venue.name || "Stade")} — ${escapeHtml(m.venue.city)} (${escapeHtml(m.venue.postcode || "")})</div>
+      <div class="line4">
+        <a href="${gmaps}" target="_blank" rel="noreferrer">Itinéraire</a>
+        ${m.source_url ? ` · <a href="${m.source_url}" target="_blank" rel="noreferrer">Source</a>` : ""}
+      </div>
     `;
-    list.appendChild(div);
+
+    item.onclick = () => {
+      currentMarkers[idx]?.openPopup();
+      map.setView([m.venue.lat, m.venue.lon], 12);
+      focusListItem(idx);
+    };
+
+    list.appendChild(item);
   });
 }
 
 function runSearch() {
-  const loc = resolveQuery(el("q").value);
-  if (!loc) {
-    setStatus("Entre une ville/CP HdF");
+  const resolved = resolveQuery(el("q").value);
+  if (!resolved) {
+    setStatus("Saisis une ville/CP des Hauts-de-France (ou utilise 📍).");
+    clearMarkers();
+    el("list").innerHTML = "";
     return;
   }
 
-  const weekend = el("weekendSelect").value;
+  const weekendId = el("weekendSelect").value;
+  const sortMode = el("sort").value;
+  const center = { lat: resolved.lat, lon: resolved.lon };
 
   let matches = allMatches
-    .filter(m => weekendFromKickoff(m.kickoff) === weekend)
+    .filter(m => weekendFromKickoffIso(m.kickoff) === weekendId)
     .filter(m => activeCompetitions.has(m.competition))
     .map(m => ({
       ...m,
-      distance: haversineKm(
-        loc.lat, loc.lon,
-        m.venue.lat, m.venue.lon
-      )
+      distance_km: haversineKm(center.lat, center.lon, m.venue.lat, m.venue.lon)
     }))
-    .filter(m => m.distance <= RADIUS_KM);
+    .filter(m => m.distance_km <= RADIUS_KM);
+
+  matches.sort((a,b) => {
+    if (sortMode === "time") return new Date(a.kickoff) - new Date(b.kickoff);
+    return a.distance_km - b.distance_km;
+  });
+
+  setStatus(`${matches.length} match(s) dans ${RADIUS_KM} km autour de ${resolved.label}`);
 
   clearMarkers();
-  matches.forEach(addMarker);
-  renderList(matches);
+  matches.forEach((m, idx) => addMarker(m, idx));
+  renderList(matches, center);
 
-  setStatus(matches.length + " match(s)");
+  if (matches.length) {
+    const bounds = L.latLngBounds(matches.map(m => [m.venue.lat, m.venue.lon]));
+    map.fitBounds(bounds.pad(0.2));
+  } else {
+    map.setView([center.lat, center.lon], 10);
+  }
 }
 
 async function loadData() {
-  const m = await fetch("data/matches.json").then(r=>r.json());
-  const g = await fetch("data/geocodes-hdf.json").then(r=>r.json());
-  allMatches = m.matches;
-  geocodes = g;
+  const [mRes, gRes, uRes] = await Promise.all([
+    fetch("data/matches.json"),
+    fetch("data/geocodes-hdf.json"),
+    fetch("data/last_update.json").catch(() => null)
+  ]);
+
+  const mJson = await mRes.json();
+  allMatches = mJson.matches || [];
+  geocodes = await gRes.json();
+
+  if (uRes) {
+    const uJson = await uRes.json();
+    el("lastUpdate").textContent = uJson?.last_update ? `Maj : ${uJson.last_update}` : "";
+  }
 }
 
 function bindUI() {
   el("q").addEventListener("input", runSearch);
   el("weekendSelect").addEventListener("change", runSearch);
+  el("sort").addEventListener("change", runSearch);
+
+  el("geoBtn").addEventListener("click", () => {
+    if (!navigator.geolocation) return alert("Géolocalisation non supportée.");
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      geocodes = [{ q: "__geo__", label: "Ma position", lat, lon }, ...geocodes];
+      el("q").value = "__geo__";
+      runSearch();
+    }, () => alert("Impossible d’obtenir la position."));
+  });
 }
 
-(async function(){
+(async function main() {
   initMap();
   buildChips();
   await loadData();
   buildWeekendSelect();
   bindUI();
+  runSearch();
 })();
