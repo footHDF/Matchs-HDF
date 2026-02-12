@@ -25,15 +25,15 @@ function showMatches(matches) {
 
   matches.forEach(match => {
 
-    const distance = haversineKm(
-      CENTER.lat,
-      CENTER.lon,
-      match.venue.lat,
-      match.venue.lon
-    );
+  const distance = haversineKm(
+    CENTER.lat,
+    CENTER.lon,
+    match.venue.lat,
+    match.venue.lon
+  );
 
-    // ⭐ FILTRE RAYON 60 km
-    if (distance > 60) return;
+  if (distance > 60) return;
+
 
 
     L.marker([match.venue.lat, match.venue.lon])
