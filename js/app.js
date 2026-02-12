@@ -1,4 +1,4 @@
-const RADIUS_KM = 60;
+const RADIUS_KM = 100;
 
 const COMPETITIONS = [
   { code: "N2", label: "N2" },
