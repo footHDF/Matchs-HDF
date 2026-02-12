@@ -1,4 +1,4 @@
-const RADIUS_KM = 100;
+const RADIUS_KM = 60;
 
 const COMPETITIONS = [
   { code: "N2", label: "N2" },
@@ -97,16 +97,24 @@ function resolveQuery(q) {
 
 function weekendFromKickoffIso(iso) {
   const d = new Date(iso);
-  const day = d.getDay(); // 0=dim, 6=sam
-  const offsetToSat = (6 - day + 7) % 7;
+  const day = d.getDay(); // 0=dim ... 6=sam
+
+  // On veut le samedi du week-end DU MATCH :
+  // - dimanche (0) => samedi veille (-1)
+  // - samedi (6) => 0
+  // - lundi (1) => +5 etc.
+  const diff = (day === 0) ? -1 : (6 - day);
+
   const sat = new Date(d);
-  sat.setDate(d.getDate() + offsetToSat);
-  sat.setHours(0,0,0,0);
+  sat.setDate(d.getDate() + diff);
+  sat.setHours(0, 0, 0, 0);
 
   const y = sat.getFullYear();
   const m = String(sat.getMonth() + 1).padStart(2, "0");
   const da = String(sat.getDate()).padStart(2, "0");
   return `${y}-${m}-${da}`;
+}
+
 
 }
 
