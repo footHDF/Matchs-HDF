@@ -18,8 +18,10 @@ USER_AGENT = "Matchs-HDF bot (GitHub Actions) - contact: actions@users.noreply.g
 
 # Ex: "sam 07 fév 2026 - 18h00" / parfois "sam 07 fev 2026 - 18h00"
 DATE_RE = re.compile(
-    r"^(lun|mar|mer|jeu|ven|sam|dim)\s+(\d{2})\s+([a-zéèêëîïôöûüàç\.]+)\s+(\d{4})\s*-\s*(\d{2})h(\d{2})$",
+    r"(lun|mar|mer|jeu|ven|sam|dim)\s+(\d{1,2})\s+([a-zéèêëîïôöûüàç\.]+)\s+(\d{4})\s*[-–]\s*(\d{1,2})h(\d{2})",
     re.IGNORECASE
+)
+
 )
 
 MONTHS = {
@@ -63,20 +65,25 @@ def norm(s: str) -> str:
 
 
 def fr_date_line_to_iso(line: str) -> str | None:
-    m = DATE_RE.match(line.strip())
+    # Normalise les tirets / espaces spéciaux
+    s = (line or "").replace("\u00A0", " ").replace("–", "-").strip()
+
+    m = DATE_RE.search(s)
     if not m:
         return None
+
     _, dd, mon, yyyy, hh, mm = m.groups()
     mon = mon.lower().replace(".", "")
+
     key4 = mon[:4]
     key3 = mon[:3]
     month = MONTHS.get(key4) or MONTHS.get(key3)
     if not month:
         return None
 
-    # Note: on force +01:00 (CET) ; pour l’été on pourra améliorer si besoin.
     dt = datetime(int(yyyy), int(month), int(dd), int(hh), int(mm))
     return dt.strftime("%Y-%m-%dT%H:%M:00+01:00")
+
 
 def fetch_text_lines(url: str) -> list[str]:
     r = requests.get(url, timeout=45, headers={"User-Agent": USER_AGENT})
@@ -88,7 +95,66 @@ def fetch_text_lines(url: str) -> list[str]:
     lines = [ln.strip() for ln in text.split("\n")]
     return [ln for ln in lines if ln]
 
+def is_score_line(s: str) -> bool:
+    s = (s or "").strip()
+    if s in {"-", " - "}:
+        return True
+    return bool(re.match(r"^\d+\s+\d+$", s))
+
+def is_ui_noise(s: str) -> bool:
+    u = (s or "").upper()
+    bad = [
+        "NAVIGATION", "SEMAINE", "CHOISISSEZ", "POULE", "LES MATCHS",
+        "CLASSEMENT", "SAISON", "RECHERCHE", "MES FAVORIS"
+    ]
+    return any(x in u for x in bad)
+
 def parse_matches(lines: list[str], competition_code: str, source_url: str) -> list[dict]:
+    """
+    Parsing robuste :
+    - repère une date/heure dans une ligne (DATE_RE.search)
+    - scanne les lignes suivantes pour trouver 2 clubs (home/away),
+      en ignorant scores et bruit UI.
+    """
+    out = []
+    i = 0
+    while i < len(lines):
+        iso = fr_date_line_to_iso(lines[i])
+        if not iso:
+            i += 1
+            continue
+
+        # Cherche les 2 équipes dans les 12 lignes suivantes
+        clubs = []
+        for j in range(i + 1, min(i + 13, len(lines))):
+            t = (lines[j] or "").strip()
+            if not t or is_ui_noise(t):
+                continue
+            if fr_date_line_to_iso(t):  # une autre date => stop
+                break
+            if is_score_line(t):
+                continue
+            # on garde les lignes "club"
+            clubs.append(t)
+            if len(clubs) == 2:
+                break
+
+        if len(clubs) == 2:
+            home, away = clubs
+            out.append({
+                "competition": competition_code,
+                "competition_label": competition_code,
+                "kickoff": iso,
+                "home": home,
+                "away": away,
+                "source": "FFF/EPREUVES",
+                "source_url": source_url
+            })
+
+        i += 1
+
+    return out
+
     """
     Parsing robuste :
     - repère une ligne date
