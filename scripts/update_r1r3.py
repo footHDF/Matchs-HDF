@@ -133,6 +133,9 @@ def main():
 
     clubs_norm = {norm(k): v for k, v in clubs.items()}
 
+    print("DEBUG clubs loaded =", len(clubs))
+print("DEBUG sample club keys =", list(clubs.keys())[:5])
+
     raw = []
 
     for comp, urls in sources.items():
@@ -144,6 +147,31 @@ def main():
 
     missing = set()
     enriched = []
+
+# DEBUG: combien de clubs domicile du calendrier sont présents dans club_locations ?
+home_keys = [norm(m["home"]) for m in raw]
+hits = sum(1 for hk in home_keys if hk in clubs_norm)
+print("DEBUG raw matches =", len(raw))
+print("DEBUG unique home clubs =", len(set(home_keys)))
+print("DEBUG home clubs matched =", hits)
+
+# DEBUG: on écrit 30 clubs domicile extraits (bruts) + leur version normée
+debug_sample = []
+seen = set()
+for m in raw:
+    h_raw = m["home"]
+    h_norm = norm(h_raw)
+    if h_norm in seen:
+        continue
+    seen.add(h_norm)
+    debug_sample.append({"home_raw": h_raw, "home_norm": h_norm})
+    if len(debug_sample) >= 30:
+        break
+
+(ROOT / "data" / "debug_home_clubs.json").write_text(
+    json.dumps(debug_sample, ensure_ascii=False, indent=2)
+)
+
 
     for m in raw:
         key = norm(m["home"])
