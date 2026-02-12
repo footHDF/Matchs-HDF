@@ -27,7 +27,11 @@ function weekendIdFromKickoff(iso) {
   const sat = new Date(d);
   sat.setDate(d.getDate() + diff);
   sat.setHours(0,0,0,0);
-  return sat.toISOString().slice(0,10);
+  const y = sat.getFullYear();
+  const m = String(sat.getMonth() + 1).padStart(2, "0");
+  const da = String(sat.getDate()).padStart(2, "0");
+  return `${y}-${m}-${da}`;
+
 }
 
 function labelWeekend(id) {
