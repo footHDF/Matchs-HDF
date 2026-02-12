@@ -1,14 +1,20 @@
 let map;
 
-const CENTER = {
+let CENTER = {
   lat: 49.848,
   lon: 3.287
 };
+
 
 async function loadMatches() {
   const res = await fetch("data/matches.json");
   const json = await res.json();
   return json.matches;
+}
+
+async function loadGeocodes() {
+  const res = await fetch("data/geocodes-hdf.json");
+  return await res.json();
 }
 
 function initMap() {
