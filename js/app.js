@@ -25,17 +25,19 @@ function showMatches(matches) {
 
   matches.forEach(match => {
 
-  const distance = haversineKm(
-    CENTER.lat,
-    CENTER.lon,
-    match.venue.lat,
-    match.venue.lon
-  );
+    const distance = haversineKm(
+      CENTER.lat,
+      CENTER.lon,
+      match.venue.lat,
+      match.venue.lon
+    );
 
-  if (distance > 60) return;
+    // ⭐ FILTRE RAYON (garanti ici)
+    if (distance > 60) {
+      return;
+    }
 
-
-
+    // ⭐ MARQUEUR
     L.marker([match.venue.lat, match.venue.lon])
       .addTo(map)
       .bindPopup(
@@ -44,6 +46,7 @@ function showMatches(matches) {
         distance.toFixed(1) + " km"
       );
 
+    // ⭐ LISTE
     const div = document.createElement("div");
     div.className = "item";
 
@@ -56,6 +59,7 @@ function showMatches(matches) {
     list.appendChild(div);
   });
 }
+
 
 async function start() {
   initMap();
