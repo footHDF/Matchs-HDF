@@ -40,4 +40,9 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
   .layout { grid-template-columns: 1fr; grid-template-rows: 55vh 45vh; }
   .panel { border-right: none; border-top: 1px solid #eee; order: 2; }
   .mapWrap { order: 1; }
+
+.chip.disabled {
+opacity: 0.4;
+cursor: not-allowed;
 }
+
