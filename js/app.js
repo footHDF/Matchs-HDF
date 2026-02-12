@@ -4,6 +4,8 @@ let CENTER = { lat: 49.848, lon: 3.287 };
 let RADIUS_KM = 60;
 let SELECTED_WEEKEND = null;
 let ACTIVE_COMPETITIONS = new Set();
+const COMP_ORDER = ["N2", "N3", "R1", "R2", "R3", "CDF", "COUPE_LFHF"];
+
 
 // ---------- Chargement ----------
 async function loadMatches() {
@@ -131,19 +133,31 @@ function bindWeekend(matches){
 }
 
 function buildCompetitionChips(matches){
-  const wrap=document.getElementById("competitions");
-  const comps=[...new Set(matches.map(m=>m.competition))];
+  const wrap = document.getElementById("competitions");
+  wrap.innerHTML = "";
 
-  comps.forEach(c=>{
-    const b=document.createElement("button");
-    b.className="chip";
-    b.textContent=c;
+  // Compétitions réellement présentes dans les données
+  const present = new Set(matches.map(m => m.competition));
 
-    b.onclick=()=>{
-      if(ACTIVE_COMPETITIONS.has(c)){
+  COMP_ORDER.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = c;
+
+    // Si la compétition n'existe pas dans le JSON, on l'affiche grisée (désactivée)
+    if (!present.has(c)) {
+      b.classList.add("disabled");
+      b.disabled = true;
+      wrap.appendChild(b);
+      return;
+    }
+
+    // Si elle existe, bouton cliquable
+    b.onclick = () => {
+      if (ACTIVE_COMPETITIONS.has(c)) {
         ACTIVE_COMPETITIONS.delete(c);
         b.classList.remove("on");
-      }else{
+      } else {
         ACTIVE_COMPETITIONS.add(c);
         b.classList.add("on");
       }
@@ -153,6 +167,7 @@ function buildCompetitionChips(matches){
     wrap.appendChild(b);
   });
 }
+
 
 // ---------- Start ----------
 async function start(){
