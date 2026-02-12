@@ -1,5 +1,6 @@
 import json
 import re
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 
@@ -36,12 +37,25 @@ MONTHS = {
     "dec": 12, "déc": 12
 }
 
-
 def norm(s):
-    s = (s or "").upper()
+    s = (s or "").upper().strip()
+
+    # Remplace ligatures
+    s = s.replace("Œ", "OE").replace("Æ", "AE")
+
+    # Supprime accents (BÉTHUNE -> BETHUNE)
+    s = "".join(
+        c for c in unicodedata.normalize("NFD", s)
+        if unicodedata.category(c) != "Mn"
+    )
+
+    # Ponctuation -> espaces
     s = re.sub(r"[’'\.\-_/]", " ", s)
-    s = re.sub(r"\s+", " ", s)
-    return s.strip().replace(" ", "")
+    s = re.sub(r"\s+", " ", s).strip()
+
+    # Enlève espaces pour tolérer "USL2" vs "USL 2"
+    return s.replace(" ", "")
+
 
 
 def fr_to_iso(line):
