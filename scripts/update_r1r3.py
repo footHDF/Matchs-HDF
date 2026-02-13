@@ -45,9 +45,19 @@ def norm(s):
     s = s.replace("Œ", "OE").replace("Æ", "AE")
     s = "".join(c for c in unicodedata.normalize("NFD", s)
                 if unicodedata.category(c) != "Mn")
+
+    # Enlève les points isolés (ex: "O.")
+    s = re.sub(r"\b([A-Z])\.\b", r"\1", s)
+
+    # Ponctuation -> espaces
     s = re.sub(r"[’'\.\-_/]", " ", s)
-    s = re.sub(r"\s+", " ", s)
-    return s.strip().replace(" ", "")
+
+    # Compacte
+    s = re.sub(r"\s+", " ", s).strip()
+
+    # IMPORTANT: supprime espaces pour tolérer "USL2" vs "USL 2"
+    return s.replace(" ", "")
+
 
 
 def fr_to_iso(line):
