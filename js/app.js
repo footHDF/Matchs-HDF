@@ -222,6 +222,7 @@ async function start() {
     const geocodes = await loadGeocodes();
 
     buildWeekendSelect(matches);
+    console.log("Unique weekends =", new Set(window.allMatches.map(m => weekendIdFromKickoff(m.kickoff))).size);
     buildCompetitionChips(matches);
     bindUI(geocodes);
 
