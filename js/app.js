@@ -8,12 +8,24 @@ let SELECTED_WEEKEND = null;
 const COMP_ORDER = ["N2", "N3", "R1", "R2", "R3", "CDF", "COUPE_LFHF"];
 let ACTIVE_COMPETITIONS = new Set();
 
-// ---------- Chargement ----------
 async function loadMatches() {
-  const res = await fetch("data/matches.json");
+  // 1) on lit le timestamp de mise à jour généré par l’action
+  let stamp = "0";
+  try {
+    const u = await fetch("data/last_update.json", { cache: "no-store" });
+    const uj = await u.json();
+    stamp = encodeURIComponent(uj.last_update || "0");
+  } catch (e) {
+    // si jamais last_update n’existe pas, on continue quand même
+    stamp = String(Date.now());
+  }
+
+  // 2) on charge matches.json en ajoutant un paramètre -> plus de cache
+  const res = await fetch(`data/matches.json?v=${stamp}`, { cache: "no-store" });
   const json = await res.json();
   return json.matches || [];
 }
+
 
 async function loadGeocodes() {
   const res = await fetch("data/geocodes-hdf.json");
