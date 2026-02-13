@@ -1,11 +1,10 @@
 import json
 import re
 import unicodedata
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES_PATH = ROOT / "scripts" / "sources_r1r3.json"
@@ -16,162 +15,190 @@ OUT_MISSING = ROOT / "data" / "missing_clubs.json"
 OUT_LAST = ROOT / "data" / "last_update.json"
 OUT_DEBUG = ROOT / "data" / "debug_home_clubs.json"
 
-# Supporte "sam 07 fév 2026 - 18h00" ET "dimanche 24 août 2025 - 15H00"
-DATE_RE = re.compile(
-    r"(lun(?:di)?|mar(?:di)?|mer(?:credi)?|jeu(?:di)?|ven(?:dredi)?|sam(?:edi)?|dim(?:anche)?)\s+"
-    r"(\d{1,2})\s+([a-zéèêëîïôöûüàç]+)\s+(\d{4})\s*[-–]\s*"
-    r"(\d{1,2})\s*[hH]\s*(\d{2})",
-    re.IGNORECASE
-)
+BASE = "https://api-dofa.fff.fr"
 
-MONTHS = {
-    "jan": 1, "janv": 1, "janvier": 1,
-    "fev": 2, "fév": 2, "fevr": 2, "févr": 2, "fevrier": 2, "février": 2,
-    "mar": 3, "mars": 3,
-    "avr": 4, "avril": 4,
-    "mai": 5,
-    "jui": 6, "juin": 6,
-    "juil": 7, "juillet": 7,
-    "aou": 8, "aoû": 8, "aout": 8, "août": 8,
-    "sep": 9, "sept": 9, "septembre": 9,
-    "oct": 10, "octobre": 10,
-    "nov": 11, "novembre": 11,
-    "dec": 12, "déc": 12, "decembre": 12, "décembre": 12
+UA = "Matchs-HDF (GitHub Actions) contact: actions@users.noreply.github.com"
+HEADERS = {
+    "User-Agent": UA,
+    "Accept": "application/json",
 }
 
 def norm(s: str) -> str:
     s = (s or "").upper().strip()
     s = s.replace("Œ", "OE").replace("Æ", "AE")
-    s = "".join(c for c in unicodedata.normalize("NFD", s)
-                if unicodedata.category(c) != "Mn")
+    s = "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
     s = re.sub(r"[’'\.\-_/]", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s.replace(" ", "")
 
-def fr_to_iso(line: str) -> str | None:
-    line = (line or "").replace("–", "-")
-    m = DATE_RE.search(line)
-    if not m:
-        return None
-
-    _, d, mon, y, h, mn = m.groups()
-    mon = mon.lower().strip()
-
-    # normalise accents pour lookup mois
-    mon_n = "".join(c for c in unicodedata.normalize("NFD", mon)
-                    if unicodedata.category(c) != "Mn")
-
-    key4 = mon_n[:4]
-    key3 = mon_n[:3]
-    month = MONTHS.get(mon_n) or MONTHS.get(key4) or MONTHS.get(key3)
-    if not month:
-        return None
-
-    dt = datetime(int(y), month, int(d), int(h), int(mn))
-    # On fixe +01:00 pour rester cohérent avec ton site (et éviter les soucis DST côté UI)
-    return dt.strftime("%Y-%m-%dT%H:%M:00+01:00")
-
-def fetch_lines(url: str) -> list[str]:
-    r = requests.get(url, timeout=45, headers={"User-Agent": "Matchs-HDF (GitHub Actions)"})
+def get_json(url: str):
+    r = requests.get(url, headers=HEADERS, timeout=45)
     r.raise_for_status()
-    soup = BeautifulSoup(r.text, "html.parser")
-    txt = soup.get_text("\n")
-    return [x.strip() for x in txt.split("\n") if x.strip()]
+    return r.json()
 
-def parse(lines: list[str], comp: str, url: str) -> list[dict]:
-    matches = []
-    i = 0
-    while i < len(lines):
-        iso = fr_to_iso(lines[i])
-        if not iso:
-            i += 1
-            continue
+def iter_any_members(obj):
+    """
+    Rend une liste d'objets "membres" depuis des réponses API de formes variées:
+    - {"hydra:member":[...]}
+    - {"member":[...]}
+    - [{"...":...}, ...]
+    - {"items":[...]}
+    """
+    if obj is None:
+        return []
+    if isinstance(obj, list):
+        return obj
+    if isinstance(obj, dict):
+        for k in ("hydra:member", "member", "items", "matches", "results"):
+            v = obj.get(k)
+            if isinstance(v, list):
+                return v
+        # sinon, si c'est un dict “single object”
+        return [obj]
+    return []
 
-        clubs = []
-        for j in range(i + 1, min(i + 16, len(lines))):
-            t = lines[j]
-            if fr_to_iso(t):
-                break
-            # ignore score/forfait bruit
-            if re.match(r"^\d+\s+\d+$", t):
-                continue
-            if "FORFAIT" in t.upper() and len(t) > 25:
-                # exemple "LENS RC 2 Forfait général" => garde le club sans "forfait"
-                t = re.sub(r"\bFORFAIT.*$", "", t, flags=re.IGNORECASE).strip()
-            if len(t) < 3:
-                continue
-            clubs.append(t)
-            if len(clubs) == 2:
-                break
+def find_first(d: dict, keys: list[str]):
+    for k in keys:
+        if k in d and d[k] not in (None, "", []):
+            return d[k]
+    return None
 
-        if len(clubs) == 2:
-            matches.append({
-                "competition": comp,
-                "competition_label": comp,
-                "kickoff": iso,
-                "home": clubs[0],
-                "away": clubs[1],
-                "source_url": url
-            })
+def parse_match(m: dict, comp_code: str, source_url: str):
+    """
+    Essaie d'extraire un match depuis des structures possibles.
+    On cherche:
+    - date/heure
+    - home/away
+    """
+    if not isinstance(m, dict):
+        return None
 
-        i += 1
-    return matches
-
-def season_bounds(today: date) -> tuple[date, date]:
-    # Saison FR : août -> juin
-    if today.month >= 7:
-        start = date(today.year, 8, 1)
-        end = date(today.year + 1, 6, 30)
+    kickoff = find_first(m, ["date", "datetime", "kickoff", "match_date", "start_date"])
+    if isinstance(kickoff, str):
+        # Normalisation légère: si pas d'offset, on force +01:00
+        if "T" in kickoff and ("+" in kickoff or kickoff.endswith("Z")):
+            iso = kickoff.replace("Z", "+00:00")
+        elif "T" in kickoff:
+            iso = kickoff + "+01:00"
+        else:
+            # date seule -> ignore
+            return None
     else:
-        start = date(today.year - 1, 8, 1)
-        end = date(today.year, 6, 30)
-    return start, end
+        return None
 
-def week_ranges(start: date, end: date) -> list[tuple[date, date]]:
-    # semaine lun->dim (beginWeek/endweek)
-    d = start
-    # aligne au lundi
-    d = d - timedelta(days=(d.weekday()))
-    ranges = []
-    while d <= end:
-        begin = d
-        finish = d + timedelta(days=6)
-        ranges.append((begin, finish))
-        d += timedelta(days=7)
-    return ranges
+    # équipes
+    home = None
+    away = None
 
-def fmt_fr(d: date) -> str:
-    return d.strftime("%d/%m/%Y")
+    # cas 1: champs directs
+    home = find_first(m, ["home", "home_team", "equipe_dom", "team_home", "homeTeam"])
+    away = find_first(m, ["away", "away_team", "equipe_ext", "team_away", "awayTeam"])
 
-def expand_weekly_urls(url_template: str, start: date, end: date) -> list[str]:
-    if "{BEGIN}" not in url_template and "{END}" not in url_template:
-        return [url_template]
+    # cas 2: structures imbriquées
+    if not home and isinstance(m.get("home"), dict):
+        home = find_first(m["home"], ["name", "libelle", "label"])
+    if not away and isinstance(m.get("away"), dict):
+        away = find_first(m["away"], ["name", "libelle", "label"])
 
-    urls = []
-    for b, e in week_ranges(start, end):
-        urls.append(
-            url_template.replace("{BEGIN}", fmt_fr(b)).replace("{END}", fmt_fr(e))
-        )
-    return urls
+    if not home and isinstance(m.get("home_team"), dict):
+        home = find_first(m["home_team"], ["name", "libelle", "label"])
+    if not away and isinstance(m.get("away_team"), dict):
+        away = find_first(m["away_team"], ["name", "libelle", "label"])
+
+    # cas 3: participants[]
+    if (not home or not away) and isinstance(m.get("participants"), list):
+        parts = m["participants"]
+        if len(parts) >= 2:
+            def pname(p):
+                if isinstance(p, dict):
+                    return find_first(p, ["name", "libelle", "label"])
+                return None
+            home = home or pname(parts[0])
+            away = away or pname(parts[1])
+
+    if not home or not away:
+        return None
+
+    return {
+        "competition": comp_code,
+        "competition_label": comp_code,
+        "kickoff": iso,
+        "home": str(home).strip(),
+        "away": str(away).strip(),
+        "source": "API-DOFA",
+        "source_url": source_url
+    }
 
 def main():
     sources = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
     clubs = json.loads(CLUBS_PATH.read_text(encoding="utf-8"))
     clubs_norm = {norm(k): v for k, v in clubs.items()}
 
-    start, end = season_bounds(date.today())
+    raw_matches = []
 
-    raw = []
-    for comp, url_list in sources.items():
-        for u in (url_list or []):
-            for url in expand_weekly_urls(u, start, end):
-                lines = fetch_lines(url)
-                raw.extend(parse(lines, comp, url))
+    for comp_code, comp_ids in sources.items():
+        for comp_id in comp_ids:
+            # 1) récupérer les poules
+            poules_url = f"{BASE}/api/compets/{comp_id}/phases/1/poules.json?filter="
+            poules_json = get_json(poules_url)
+            poules = iter_any_members(poules_json)
 
-    # debug: 30 clubs domicile uniques
+            # poule number / stage_number / number
+            poule_nos = []
+            for p in poules:
+                if not isinstance(p, dict):
+                    continue
+                no = find_first(p, ["number", "poule_no", "stage_number", "gp_no"])
+                if isinstance(no, int):
+                    poule_nos.append(no)
+                elif isinstance(no, str) and no.isdigit():
+                    poule_nos.append(int(no))
+
+            poule_nos = sorted(set(poule_nos))
+            if not poule_nos:
+                print("WARN: aucune poule détectée pour", comp_id, comp_code)
+                continue
+
+            # 2) Pour chaque poule: résultat + calendrier (on concatène)
+            for poule_no in poule_nos:
+                for endpoint in ("resultat", "calendrier"):
+                    url = f"{BASE}/api/compets/{comp_id}/phases/1/poules/{poule_no}/{endpoint}"
+                    try:
+                        data = get_json(url)
+                    except Exception as e:
+                        print("WARN:", url, "=>", e)
+                        continue
+
+                    members = iter_any_members(data)
+
+                    # Si la réponse est une liste “verbeuse”, on essaie aussi des sous-listes
+                    candidates = []
+                    for x in members:
+                        if isinstance(x, dict):
+                            # parfois la liste de matchs est dans une clé
+                            for k in ("matches", "matchs", "rencontres", "games"):
+                                if isinstance(x.get(k), list):
+                                    candidates.extend(x[k])
+                            candidates.append(x)
+                        else:
+                            candidates.append(x)
+
+                    for m in candidates:
+                        parsed = parse_match(m, comp_code, url)
+                        if parsed:
+                            raw_matches.append(parsed)
+
+    # dédoublonnage
+    uniq = {}
+    for m in raw_matches:
+        key = (m["competition"], m["kickoff"], norm(m["home"]), norm(m["away"]))
+        uniq[key] = m
+    raw_matches = list(uniq.values())
+
+    # debug: 30 clubs domicile
     debug = []
     seen = set()
-    for m in raw:
+    for m in sorted(raw_matches, key=lambda x: x["kickoff"]):
         k = norm(m["home"])
         if k not in seen:
             debug.append({"raw": m["home"], "norm": k})
@@ -180,24 +207,32 @@ def main():
             break
     OUT_DEBUG.write_text(json.dumps(debug, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    # enrichir avec coordonnées club domicile
     missing = set()
     enriched = []
-
-    for m in raw:
-        key = norm(m["home"])
-        if key not in clubs_norm:
+    for m in raw_matches:
+        hk = norm(m["home"])
+        if hk not in clubs_norm:
             missing.add(m["home"])
             continue
-
-        loc = clubs_norm[key]
-        m["venue"] = {"city": loc["city"], "lat": loc["lat"], "lon": loc["lon"]}
+        loc = clubs_norm[hk]
+        m["venue"] = {
+            "city": loc.get("city", ""),
+            "lat": float(loc["lat"]),
+            "lon": float(loc["lon"])
+        }
         enriched.append(m)
 
-    OUT_MATCHES.write_text(json.dumps({"season": "auto", "matches": enriched}, ensure_ascii=False, indent=2), encoding="utf-8")
+    enriched.sort(key=lambda x: x["kickoff"])
+
+    OUT_MATCHES.write_text(
+        json.dumps({"season": "auto", "matches": enriched}, ensure_ascii=False, indent=2),
+        encoding="utf-8"
+    )
     OUT_MISSING.write_text(json.dumps(sorted(missing), ensure_ascii=False, indent=2), encoding="utf-8")
     OUT_LAST.write_text(json.dumps({"last_update": datetime.now().isoformat()}, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print("DEBUG raw matches =", len(raw))
+    print("DEBUG raw matches =", len(raw_matches))
     print("DEBUG enriched matches =", len(enriched))
     print("DEBUG missing clubs =", len(missing))
 
