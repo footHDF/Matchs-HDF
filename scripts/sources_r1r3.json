@@ -1,6 +1,5 @@
 {
-  "R1": [
-    "https://lfhf.fff.fr/competitions/?id=439189&phase=1&poule=1&type=ch&tab=resultat&beginWeek={BEGIN}&endweek={END}",
-    "https://lfhf.fff.fr/competitions/?id=439189&phase=1&poule=2&type=ch&tab=resultat&beginWeek={BEGIN}&endweek={END}"
-  ]
+  "R1": [439189],
+  "R2": [],
+  "R3": []
 }
