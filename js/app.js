@@ -34,20 +34,28 @@ async function loadGeocodes() {
 
 // ---------- Week-end (samedi du week-end du match) ----------
 function weekendIdFromKickoff(iso) {
+  // iso exemple: "2026-02-14T18:00:00+01:00"
   const d = new Date(iso);
-  const day = d.getDay(); // 0=dim ... 6=sam
-  const diff = (day === 0) ? -1 : (6 - day); // dimanche => samedi veille
+
+  // getDay(): 0=dim,1=lun,...,6=sam
+  const dow = d.getDay();
+
+  // On veut le samedi du week-end "samedi+dimanche"
+  // - si c'est dimanche (0) -> samedi veille
+  // - sinon -> prochain samedi de la semaine
+  const diffToSaturday = (dow === 0) ? -1 : (6 - dow);
 
   const sat = new Date(d);
-  sat.setDate(d.getDate() + diff);
+  sat.setDate(d.getDate() + diffToSaturday);
   sat.setHours(0, 0, 0, 0);
 
-  // IMPORTANT: format LOCAL (pas toISOString, sinon bug UTC)
+  // IMPORTANT: format local (pas toISOString)
   const y = sat.getFullYear();
   const m = String(sat.getMonth() + 1).padStart(2, "0");
   const da = String(sat.getDate()).padStart(2, "0");
   return `${y}-${m}-${da}`;
 }
+
 
 function labelWeekend(id) {
   const [y, m, d] = id.split("-").map(Number);
