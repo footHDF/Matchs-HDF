@@ -1,4 +1,538 @@
 {
   "season": "auto",
-  "matches": []
+  "matches": [
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-06T17:30:00+01:00",
+      "home": "CALAIS BEAU MARAIS F",
+      "away": "LOON PLAGE FC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Calais",
+        "lat": 50.9454645,
+        "lon": 1.8988184
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "COQUELLES SC",
+      "away": "OUTREAU ASF",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Coquelles",
+        "lat": 50.9363698,
+        "lon": 1.8000938
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ARMENTIERES JA",
+      "away": "BRUAY LABUISSIERE US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Armentières",
+        "lat": 50.6867281,
+        "lon": 2.882169
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ESQUELBECQ US",
+      "away": "AIRE SUR LA LYS OS",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Esquelbecq",
+        "lat": 50.8862129,
+        "lon": 2.4309131
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "AVION CS",
+      "away": "LESQUIN US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/2/resultats-et-calendrier",
+      "venue": {
+        "city": "Avion",
+        "lat": 50.4096876,
+        "lon": 2.8209275
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "SECLIN FC",
+      "away": "BULLY LES MINES ES",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/2/resultats-et-calendrier",
+      "venue": {
+        "city": "Seclin",
+        "lat": 50.5452102,
+        "lon": 3.0252819
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-06T18:00:00+01:00",
+      "home": "ABBEVILLE SC",
+      "away": "MERU US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Abbeville",
+        "lat": 50.1060835,
+        "lon": 1.8337029
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-06T20:00:00+01:00",
+      "home": "BRETEUIL US",
+      "away": "AMIENS PORTUGAIS FCP",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Breteuil",
+        "lat": 49.6329792,
+        "lon": 2.2939649
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "GOUVIEUX US",
+      "away": "ST MAXIMIN US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Gouvieux",
+        "lat": 49.1902,
+        "lon": 2.41521
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "LIANCOURT CLERMONT",
+      "away": "ROYE US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Liancourt",
+        "lat": 49.3281942,
+        "lon": 2.4634774
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "BEAUVAIS OISE AS 2",
+      "away": "MONTREUIL SUR MER US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Beauvais",
+        "lat": 49.4300997,
+        "lon": 2.0823355
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "CHOISY AU BAC US",
+      "away": "SENLIS USM",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Choisy-au-Bac",
+        "lat": 49.439618,
+        "lon": 2.8774424
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ESCAUDAIN DENAIN US",
+      "away": "RAISMES FC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Denain",
+        "lat": 50.3419206,
+        "lon": 3.3740662
+      }
+    },
+    {
+      "competition": "R2",
+      "competition_label": "R2",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "FOURMIES US",
+      "away": "CREIL AFC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439190-seniors-regional-2/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Fourmies",
+        "lat": 50.0171741,
+        "lon": 4.0458492
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "BULLY LES MINES ES 2",
+      "away": "CALONNE RICOUART FCC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Bully-les-Mines",
+        "lat": 50.4464,
+        "lon": 2.71989
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "LABOURSE RC",
+      "away": "COS MARLES",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Labourse",
+        "lat": 50.4972978,
+        "lon": 2.679865
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "BERCK AS",
+      "away": "ST MARTIN BOULOGNE O",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/1/resultats-et-calendrier",
+      "venue": {
+        "city": "Berck",
+        "lat": 50.4052576,
+        "lon": 1.5711617
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "DUNKERQUE SUD AS",
+      "away": "BETHUNE STADE 2",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/2/resultats-et-calendrier",
+      "venue": {
+        "city": "Dunkerque",
+        "lat": 51.0302174,
+        "lon": 2.364761
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ARQUES ES",
+      "away": "ST MARTIN TATINGHEM",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/2/resultats-et-calendrier",
+      "venue": {
+        "city": "Arques",
+        "lat": 50.737779,
+        "lon": 2.2978535
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "LOON PLAGE FC 2",
+      "away": "NOEUX LES MINES US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/2/resultats-et-calendrier",
+      "venue": {
+        "city": "Loon-Plage",
+        "lat": 50.9946103,
+        "lon": 2.2192457
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "HAUBOURDIN CG",
+      "away": "BAILLEUL SC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Haubourdin",
+        "lat": 50.6012839,
+        "lon": 2.9898613
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "HAZEBROUCK SC 2",
+      "away": "MOUVAUX ES",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Hazebrouck",
+        "lat": 50.7226113,
+        "lon": 2.5360331
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ST ANDRE US",
+      "away": "WINGLES SCPP",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Gouy-Saint-André",
+        "lat": 50.3736056,
+        "lon": 1.9003344
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "VERMELLES US",
+      "away": "TOURCOING US 2",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/3/resultats-et-calendrier",
+      "venue": {
+        "city": "Vermelles",
+        "lat": 50.4884634,
+        "lon": 2.746528
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "HEM O.",
+      "away": "BEUVRY LA FORET AS",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Hem",
+        "lat": 50.6540895,
+        "lon": 3.1839429
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "FACHES THUMESNIL FC",
+      "away": "MONS EN BAROEUL AC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Faches-Thumesnil",
+        "lat": 50.6026031,
+        "lon": 3.0697877
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ST AMAND FC 2",
+      "away": "MARQUETTE FF",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Saint-Amand",
+        "lat": 50.1639886,
+        "lon": 2.5577664
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ASCQ US",
+      "away": "BILLY MONTIGNY CARAB",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/4/resultats-et-calendrier",
+      "venue": {
+        "city": "Villeneuve-d'Ascq",
+        "lat": 50.6195154,
+        "lon": 3.1599434
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-06T17:00:00+01:00",
+      "home": "GUESNAIN SC",
+      "away": "BIACHE ST VAAST US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/5/resultats-et-calendrier",
+      "venue": {
+        "city": "Guesnain",
+        "lat": 50.3493,
+        "lon": 3.15059
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ARRAS FA 2",
+      "away": "HENIN BEAUMONT O.",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/5/resultats-et-calendrier",
+      "venue": {
+        "city": "Arras",
+        "lat": 50.291048,
+        "lon": 2.7772211
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "HORDAIN US",
+      "away": "BREBIERES AS",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/5/resultats-et-calendrier",
+      "venue": {
+        "city": "Hordain",
+        "lat": 50.2622985,
+        "lon": 3.3129777
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "BERLAIMONT US",
+      "away": "HAUTMONT AS",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/6/resultats-et-calendrier",
+      "venue": {
+        "city": "Berlaimont",
+        "lat": 50.2026418,
+        "lon": 3.8123133
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ST QUENTIN O. 2",
+      "away": "TERGNIER FC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/6/resultats-et-calendrier",
+      "venue": {
+        "city": "Saint-Quentin",
+        "lat": 49.8465253,
+        "lon": 3.2876843
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "RIBEMONT MEZIERES US",
+      "away": "BUIRE HIRSON US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/6/resultats-et-calendrier",
+      "venue": {
+        "city": "Séry-lès-Mézières",
+        "lat": 49.7759187,
+        "lon": 3.4234978
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "LONGUEAU ESC 2",
+      "away": "CHAMBLY OISE FC 3",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/7/resultats-et-calendrier",
+      "venue": {
+        "city": "Longueau",
+        "lat": 49.8702523,
+        "lon": 2.3574279
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "BALAGNY US",
+      "away": "BEAUVAIS OISE AS 3",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/7/resultats-et-calendrier",
+      "venue": {
+        "city": "Balagny-sur-Thérain",
+        "lat": 49.2959835,
+        "lon": 2.3361068
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "CHAUMONT EN VEXIN CS",
+      "away": "AMIENS AC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/7/resultats-et-calendrier",
+      "venue": {
+        "city": "Chaumont-en-Vexin",
+        "lat": 49.2625682,
+        "lon": 1.8821405
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "ST JUST EN CHAUSSEE",
+      "away": "FLIXECOURT SC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/7/resultats-et-calendrier",
+      "venue": {
+        "city": "Saint-Just-en-Chaussée",
+        "lat": 49.5052334,
+        "lon": 2.4337604
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "MONTDIDIER AC",
+      "away": "SOISSONS IFC 2",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/8/resultats-et-calendrier",
+      "venue": {
+        "city": "Montdidier",
+        "lat": 49.6460204,
+        "lon": 2.570196
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "CREPY EN VALOIS US",
+      "away": "BETHISY FC",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/8/resultats-et-calendrier",
+      "venue": {
+        "city": "Crépy-en-Valois",
+        "lat": 49.2358509,
+        "lon": 2.8900507
+      }
+    },
+    {
+      "competition": "R3",
+      "competition_label": "R3",
+      "kickoff": "2025-09-07T15:00:00+01:00",
+      "home": "RIBECOURT US",
+      "away": "MARGNY COMPIEGNE US",
+      "source_url": "https://epreuves.fff.fr/competition/engagement/439191-seniors-regional-3/phase/1/8/resultats-et-calendrier",
+      "venue": {
+        "city": "Ribécourt-Dreslincourt",
+        "lat": 49.5049772,
+        "lon": 2.9268341
+      }
+    }
+  ]
 }

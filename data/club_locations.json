@@ -1,30 +1,347 @@
 {
-  "BOULOGNE S/MER USCO 2": { "city": "Boulogne-sur-Mer", "lat": 50.7252, "lon": 1.6136 },
-  "STEENVOORDE AS": { "city": "Steenvoorde", "lat": 50.8106, "lon": 2.5832 },
-  "MARCQ EN BAROEUL O.": { "city": "Marcq-en-Barœul", "lat": 50.6764, "lon": 3.0977 },
-  "BONDUES FC": { "city": "Bondues", "lat": 50.7007, "lon": 3.0946 },
-  "BETHUNE STADE": { "city": "Béthune", "lat": 50.5310, "lon": 2.6400 },
-  "CALAIS RACING CLUB": { "city": "Calais", "lat": 50.9513, "lon": 1.8587 },
-  "GRAVELINES US": { "city": "Gravelines", "lat": 50.9860, "lon": 2.1280 },
-  "DUNKERQUE USL2": { "city": "Dunkerque", "lat": 51.0344, "lon": 2.3768 },
-  "GRANDE SYNTHE O.": { "city": "Grande-Synthe", "lat": 51.0111, "lon": 2.2992 },
-  "TOURCOING US": { "city": "Tourcoing", "lat": 50.7239, "lon": 3.1612 },
-  "ROUBAIX RACING CLUB": { "city": "Roubaix", "lat": 50.6927, "lon": 3.1746 },
-  "PAYS DE ST OMER US": { "city": "Saint-Omer", "lat": 50.7501, "lon": 2.2602 },
-  "MONTIGNY GOHELLE FC": { "city": "Montigny-en-Gohelle", "lat": 50.4240, "lon": 2.9393 },
-  "LENS RC 2": { "city": "Lens", "lat": 50.4322, "lon": 2.8331 },
-  "VALENCIENNES FC 2": { "city": "Valenciennes", "lat": 50.3571, "lon": 3.5230 },
-  "ST AMAND FC": { "city": "Saint-Amand-les-Eaux", "lat": 50.4470, "lon": 3.4300 },
-  "MAUBEUGE US": { "city": "Maubeuge", "lat": 50.2779, "lon": 3.9727 },
-  "ARRAS FA": { "city": "Arras", "lat": 50.2910, "lon": 2.7770 },
-  "CAMBRAI AC": { "city": "Cambrai", "lat": 50.1750, "lon": 3.2340 },
-  "CAMON US": { "city": "Camon", "lat": 49.8870, "lon": 2.3440 },
-  "SOISSONS IFC": { "city": "Soissons", "lat": 49.3817, "lon": 3.3236 },
-  "COMPIEGNE AFC": { "city": "Compiègne", "lat": 49.4170, "lon": 2.8269 },
-  "LONGUEAU ESC": { "city": "Longueau", "lat": 49.8660, "lon": 2.3570 },
-  "ITANCOURT NEUVILLE": { "city": "Itancourt", "lat": 49.8040, "lon": 3.3350 },
-  "LAON US": { "city": "Laon", "lat": 49.5640, "lon": 3.6230 },
-  "FEIGNIES/AULNOYE EFC 2": { "city": "Aulnoye-Aymeries", "lat": 50.2010, "lon": 3.8380 },
-  "CHAMBLY OISE FC 2": { "city": "Chambly", "lat": 49.1650, "lon": 2.2490 },
-  "PONT STE MAXENCE US": { "city": "Pont-Sainte-Maxence", "lat": 49.3010, "lon": 2.6040 }
+  "BOULOGNE S/MER USCO 2": {
+    "city": "Boulogne-sur-Mer",
+    "lat": 50.7252,
+    "lon": 1.6136
+  },
+  "STEENVOORDE AS": {
+    "city": "Steenvoorde",
+    "lat": 50.8106,
+    "lon": 2.5832
+  },
+  "MARCQ EN BAROEUL O.": {
+    "city": "Marcq-en-Barœul",
+    "lat": 50.6764,
+    "lon": 3.0977
+  },
+  "BONDUES FC": {
+    "city": "Bondues",
+    "lat": 50.7007,
+    "lon": 3.0946
+  },
+  "BETHUNE STADE": {
+    "city": "Béthune",
+    "lat": 50.531,
+    "lon": 2.64
+  },
+  "CALAIS RACING CLUB": {
+    "city": "Calais",
+    "lat": 50.9513,
+    "lon": 1.8587
+  },
+  "GRAVELINES US": {
+    "city": "Gravelines",
+    "lat": 50.986,
+    "lon": 2.128
+  },
+  "DUNKERQUE USL2": {
+    "city": "Dunkerque",
+    "lat": 51.0344,
+    "lon": 2.3768
+  },
+  "GRANDE SYNTHE O.": {
+    "city": "Grande-Synthe",
+    "lat": 51.0111,
+    "lon": 2.2992
+  },
+  "TOURCOING US": {
+    "city": "Tourcoing",
+    "lat": 50.7239,
+    "lon": 3.1612
+  },
+  "ROUBAIX RACING CLUB": {
+    "city": "Roubaix",
+    "lat": 50.6927,
+    "lon": 3.1746
+  },
+  "PAYS DE ST OMER US": {
+    "city": "Saint-Omer",
+    "lat": 50.7501,
+    "lon": 2.2602
+  },
+  "MONTIGNY GOHELLE FC": {
+    "city": "Montigny-en-Gohelle",
+    "lat": 50.424,
+    "lon": 2.9393
+  },
+  "LENS RC 2": {
+    "city": "Lens",
+    "lat": 50.4322,
+    "lon": 2.8331
+  },
+  "VALENCIENNES FC 2": {
+    "city": "Valenciennes",
+    "lat": 50.3571,
+    "lon": 3.523
+  },
+  "ST AMAND FC": {
+    "city": "Saint-Amand-les-Eaux",
+    "lat": 50.447,
+    "lon": 3.43
+  },
+  "MAUBEUGE US": {
+    "city": "Maubeuge",
+    "lat": 50.2779,
+    "lon": 3.9727
+  },
+  "ARRAS FA": {
+    "city": "Arras",
+    "lat": 50.291,
+    "lon": 2.777
+  },
+  "CAMBRAI AC": {
+    "city": "Cambrai",
+    "lat": 50.175,
+    "lon": 3.234
+  },
+  "CAMON US": {
+    "city": "Camon",
+    "lat": 49.887,
+    "lon": 2.344
+  },
+  "SOISSONS IFC": {
+    "city": "Soissons",
+    "lat": 49.3817,
+    "lon": 3.3236
+  },
+  "COMPIEGNE AFC": {
+    "city": "Compiègne",
+    "lat": 49.417,
+    "lon": 2.8269
+  },
+  "LONGUEAU ESC": {
+    "city": "Longueau",
+    "lat": 49.866,
+    "lon": 2.357
+  },
+  "ITANCOURT NEUVILLE": {
+    "city": "Itancourt",
+    "lat": 49.804,
+    "lon": 3.335
+  },
+  "LAON US": {
+    "city": "Laon",
+    "lat": 49.564,
+    "lon": 3.623
+  },
+  "FEIGNIES/AULNOYE EFC 2": {
+    "city": "Aulnoye-Aymeries",
+    "lat": 50.201,
+    "lon": 3.838
+  },
+  "CHAMBLY OISE FC 2": {
+    "city": "Chambly",
+    "lat": 49.165,
+    "lon": 2.249
+  },
+  "PONT STE MAXENCE US": {
+    "city": "Pont-Sainte-Maxence",
+    "lat": 49.301,
+    "lon": 2.604
+  },
+  "ABBEVILLE SC": {
+    "city": "Abbeville",
+    "lat": 50.1060835,
+    "lon": 1.8337029
+  },
+  "ARMENTIERES JA": {
+    "city": "Armentières",
+    "lat": 50.6867281,
+    "lon": 2.882169
+  },
+  "ARQUES ES": {
+    "city": "Arques",
+    "lat": 50.737779,
+    "lon": 2.2978535
+  },
+  "ARRAS FA 2": {
+    "city": "Arras",
+    "lat": 50.291048,
+    "lon": 2.7772211
+  },
+  "ASCQ US": {
+    "city": "Villeneuve-d'Ascq",
+    "lat": 50.6195154,
+    "lon": 3.1599434
+  },
+  "AVION CS": {
+    "city": "Avion",
+    "lat": 50.4096876,
+    "lon": 2.8209275
+  },
+  "BALAGNY US": {
+    "city": "Balagny-sur-Thérain",
+    "lat": 49.2959835,
+    "lon": 2.3361068
+  },
+  "BEAUVAIS OISE AS 2": {
+    "city": "Beauvais",
+    "lat": 49.4300997,
+    "lon": 2.0823355
+  },
+  "BERCK AS": {
+    "city": "Berck",
+    "lat": 50.4052576,
+    "lon": 1.5711617
+  },
+  "BERLAIMONT US": {
+    "city": "Berlaimont",
+    "lat": 50.2026418,
+    "lon": 3.8123133
+  },
+  "BRETEUIL US": {
+    "city": "Breteuil",
+    "lat": 49.6329792,
+    "lon": 2.2939649
+  },
+  "BULLY LES MINES ES 2": {
+    "city": "Bully-les-Mines",
+    "lat": 50.4464,
+    "lon": 2.71989
+  },
+  "CALAIS BEAU MARAIS F": {
+    "city": "Calais",
+    "lat": 50.9454645,
+    "lon": 1.8988184
+  },
+  "CHAUMONT EN VEXIN CS": {
+    "city": "Chaumont-en-Vexin",
+    "lat": 49.2625682,
+    "lon": 1.8821405
+  },
+  "CHOISY AU BAC US": {
+    "city": "Choisy-au-Bac",
+    "lat": 49.439618,
+    "lon": 2.8774424
+  },
+  "COQUELLES SC": {
+    "city": "Coquelles",
+    "lat": 50.9363698,
+    "lon": 1.8000938
+  },
+  "CREPY EN VALOIS US": {
+    "city": "Crépy-en-Valois",
+    "lat": 49.2358509,
+    "lon": 2.8900507
+  },
+  "DUNKERQUE SUD AS": {
+    "city": "Dunkerque",
+    "lat": 51.0302174,
+    "lon": 2.364761
+  },
+  "ESCAUDAIN DENAIN US": {
+    "city": "Denain",
+    "lat": 50.3419206,
+    "lon": 3.3740662
+  },
+  "ESQUELBECQ US": {
+    "city": "Esquelbecq",
+    "lat": 50.8862129,
+    "lon": 2.4309131
+  },
+  "FACHES THUMESNIL FC": {
+    "city": "Faches-Thumesnil",
+    "lat": 50.6026031,
+    "lon": 3.0697877
+  },
+  "FOURMIES US": {
+    "city": "Fourmies",
+    "lat": 50.0171741,
+    "lon": 4.0458492
+  },
+  "GOUVIEUX US": {
+    "city": "Gouvieux",
+    "lat": 49.1902,
+    "lon": 2.41521
+  },
+  "GUESNAIN SC": {
+    "city": "Guesnain",
+    "lat": 50.3493,
+    "lon": 3.15059
+  },
+  "HAUBOURDIN CG": {
+    "city": "Haubourdin",
+    "lat": 50.6012839,
+    "lon": 2.9898613
+  },
+  "HAZEBROUCK SC 2": {
+    "city": "Hazebrouck",
+    "lat": 50.7226113,
+    "lon": 2.5360331
+  },
+  "HEM O.": {
+    "city": "Hem",
+    "lat": 50.6540895,
+    "lon": 3.1839429
+  },
+  "HORDAIN US": {
+    "city": "Hordain",
+    "lat": 50.2622985,
+    "lon": 3.3129777
+  },
+  "LABOURSE RC": {
+    "city": "Labourse",
+    "lat": 50.4972978,
+    "lon": 2.679865
+  },
+  "LIANCOURT CLERMONT": {
+    "city": "Liancourt",
+    "lat": 49.3281942,
+    "lon": 2.4634774
+  },
+  "LONGUEAU ESC 2": {
+    "city": "Longueau",
+    "lat": 49.8702523,
+    "lon": 2.3574279
+  },
+  "LOON PLAGE FC 2": {
+    "city": "Loon-Plage",
+    "lat": 50.9946103,
+    "lon": 2.2192457
+  },
+  "MONTDIDIER AC": {
+    "city": "Montdidier",
+    "lat": 49.6460204,
+    "lon": 2.570196
+  },
+  "RIBECOURT US": {
+    "city": "Ribécourt-Dreslincourt",
+    "lat": 49.5049772,
+    "lon": 2.9268341
+  },
+  "RIBEMONT MEZIERES US": {
+    "city": "Séry-lès-Mézières",
+    "lat": 49.7759187,
+    "lon": 3.4234978
+  },
+  "SECLIN FC": {
+    "city": "Seclin",
+    "lat": 50.5452102,
+    "lon": 3.0252819
+  },
+  "ST AMAND FC 2": {
+    "city": "Saint-Amand",
+    "lat": 50.1639886,
+    "lon": 2.5577664
+  },
+  "ST ANDRE US": {
+    "city": "Gouy-Saint-André",
+    "lat": 50.3736056,
+    "lon": 1.9003344
+  },
+  "ST JUST EN CHAUSSEE": {
+    "city": "Saint-Just-en-Chaussée",
+    "lat": 49.5052334,
+    "lon": 2.4337604
+  },
+  "ST QUENTIN O. 2": {
+    "city": "Saint-Quentin",
+    "lat": 49.8465253,
+    "lon": 3.2876843
+  },
+  "VERMELLES US": {
+    "city": "Vermelles",
+    "lat": 50.4884634,
+    "lon": 2.746528
+  }
 }
