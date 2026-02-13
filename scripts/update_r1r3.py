@@ -59,62 +59,63 @@ def iter_any_members(obj):
 
 def find_first(d: dict, keys: list[str]):
     for k in keys:
+        if not isinstance(d, dict):
+            continue
         if k in d and d[k] not in (None, "", []):
             return d[k]
     return None
 
+def team_label(x):
+    """Extrait un nom lisible depuis un dict 'équipe/club' DOFA."""
+    if x is None:
+        return None
+    if isinstance(x, str):
+        return x.strip()
+    if isinstance(x, dict):
+        # Cas typique: {'short_name': 'GRAVELINES US', ...}
+        for k in ("short_name_federation", "short_name_ligue", "short_name", "name", "label", "libelle"):
+            v = x.get(k)
+            if isinstance(v, str) and v.strip():
+                return v.strip()
+        # parfois imbriqué
+        for k in ("team", "equipe", "club"):
+            v = x.get(k)
+            if isinstance(v, dict):
+                got = team_label(v)
+                if got:
+                    return got
+    return None
+
+
 def parse_match(m: dict, comp_code: str, source_url: str):
-    """
-    Essaie d'extraire un match depuis des structures possibles.
-    On cherche:
-    - date/heure
-    - home/away
-    """
     if not isinstance(m, dict):
         return None
 
     kickoff = find_first(m, ["date", "datetime", "kickoff", "match_date", "start_date"])
-    if isinstance(kickoff, str):
-        # Normalisation légère: si pas d'offset, on force +01:00
-        if "T" in kickoff and ("+" in kickoff or kickoff.endswith("Z")):
-            iso = kickoff.replace("Z", "+00:00")
-        elif "T" in kickoff:
-            iso = kickoff + "+01:00"
-        else:
-            # date seule -> ignore
-            return None
-    else:
+    if not isinstance(kickoff, str) or "T" not in kickoff:
         return None
 
-    # équipes
-    home = None
-    away = None
+    # normalise ISO
+    if kickoff.endswith("Z"):
+        iso = kickoff.replace("Z", "+00:00")
+    elif "+" in kickoff:
+        iso = kickoff
+    else:
+        iso = kickoff + "+01:00"
 
-    # cas 1: champs directs
-    home = find_first(m, ["home", "home_team", "equipe_dom", "team_home", "homeTeam"])
-    away = find_first(m, ["away", "away_team", "equipe_ext", "team_away", "awayTeam"])
+    # équipes : essayer plein de clés possibles
+    home_obj = find_first(m, ["home", "home_team", "equipe_dom", "team_home", "homeTeam", "domicile", "teamHome"])
+    away_obj = find_first(m, ["away", "away_team", "equipe_ext", "team_away", "awayTeam", "visiteur", "teamAway"])
 
-    # cas 2: structures imbriquées
-    if not home and isinstance(m.get("home"), dict):
-        home = find_first(m["home"], ["name", "libelle", "label"])
-    if not away and isinstance(m.get("away"), dict):
-        away = find_first(m["away"], ["name", "libelle", "label"])
-
-    if not home and isinstance(m.get("home_team"), dict):
-        home = find_first(m["home_team"], ["name", "libelle", "label"])
-    if not away and isinstance(m.get("away_team"), dict):
-        away = find_first(m["away_team"], ["name", "libelle", "label"])
-
-    # cas 3: participants[]
-    if (not home or not away) and isinstance(m.get("participants"), list):
+    # participants[]
+    if (home_obj is None or away_obj is None) and isinstance(m.get("participants"), list):
         parts = m["participants"]
         if len(parts) >= 2:
-            def pname(p):
-                if isinstance(p, dict):
-                    return find_first(p, ["name", "libelle", "label"])
-                return None
-            home = home or pname(parts[0])
-            away = away or pname(parts[1])
+            home_obj = home_obj or parts[0]
+            away_obj = away_obj or parts[1]
+
+    home = team_label(home_obj)
+    away = team_label(away_obj)
 
     if not home or not away:
         return None
@@ -123,8 +124,8 @@ def parse_match(m: dict, comp_code: str, source_url: str):
         "competition": comp_code,
         "competition_label": comp_code,
         "kickoff": iso,
-        "home": str(home).strip(),
-        "away": str(away).strip(),
+        "home": home,
+        "away": away,
         "source": "API-DOFA",
         "source_url": source_url
     }
