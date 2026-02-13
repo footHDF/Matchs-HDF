@@ -170,24 +170,46 @@ function bindRadius(matches) {
   });
 }
 
-function buildWeekendSelect(matches) {
-  const select = document.getElementById("weekend");
-  if (!select) return;
+function populateWeekendSelect(matches) {
 
-  const ids = Array.from(new Set(matches.map(m => weekendIdFromKickoff(m.kickoff))))
-    .sort((a, b) => a.localeCompare(b));
+  const select = document.getElementById("weekendSelect");
 
+  // vide le menu
   select.innerHTML = "";
-  ids.forEach(id => {
+
+  // construit la liste unique des week-ends
+  const weekendSet = new Set();
+
+  matches.forEach(m => {
+    const id = weekendIdFromKickoff(m.kickoff);
+    weekendSet.add(id);
+  });
+
+  // tri chronologique
+  const weekends = Array.from(weekendSet).sort();
+
+  // injecte dans le menu
+  weekends.forEach(w => {
     const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = labelWeekend(id);
+    opt.value = w;
+
+    const d = new Date(w);
+    opt.textContent =
+      d.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit"
+      }) +
+      " week-end";
+
     select.appendChild(opt);
   });
 
-  SELECTED_WEEKEND = ids[0] || null;
-  if (SELECTED_WEEKEND) select.value = SELECTED_WEEKEND;
+  // sélectionne automatiquement le prochain week-end
+  if (weekends.length) {
+    select.value = weekends[0];
+  }
 }
+
 
 function bindWeekend(matches) {
   const select = document.getElementById("weekend");
