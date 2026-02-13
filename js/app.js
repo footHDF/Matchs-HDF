@@ -25,20 +25,26 @@ function clearMarkers() {
   });
 }
 
-// ✅ Calcul du samedi du week-end du match (sam+dim), en local (pas UTC)
 function weekendIdFromKickoff(iso) {
-  const d = new Date(iso);
-  const dow = d.getDay(); // 0 dim ... 6 sam
-  const diffToSaturday = (dow === 0) ? -1 : (6 - dow);
-  const sat = new Date(d);
-  sat.setDate(d.getDate() + diffToSaturday);
-  sat.setHours(0, 0, 0, 0);
+  // On se base uniquement sur la date "YYYY-MM-DD" pour éviter tout effet timezone/DST
+  const datePart = (iso || "").slice(0, 10); // ex: "2025-09-06"
+  const [y, m, d] = datePart.split("-").map(Number);
 
-  const y = sat.getFullYear();
-  const m = String(sat.getMonth() + 1).padStart(2, "0");
-  const da = String(sat.getDate()).padStart(2, "0");
-  return `${y}-${m}-${da}`;
+  // Date locale à midi (évite les bugs autour de minuit / DST)
+  const base = new Date(y, m - 1, d, 12, 0, 0, 0);
+
+  const dow = base.getDay(); // 0 dim ... 6 sam
+  const diffToSaturday = (dow === 0) ? -1 : (6 - dow);
+
+  const sat = new Date(base);
+  sat.setDate(base.getDate() + diffToSaturday);
+
+  const yy = sat.getFullYear();
+  const mm = String(sat.getMonth() + 1).padStart(2, "0");
+  const dd = String(sat.getDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
 }
+
 
 function labelWeekend(id) {
   const [y, m, d] = id.split("-").map(Number);
