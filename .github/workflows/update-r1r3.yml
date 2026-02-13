@@ -2,8 +2,9 @@ name: Update R1/R2/R3 (HDF)
 
 on:
   workflow_dispatch:
+
   schedule:
-    # Tous les vendredis à 05:30 UTC (~06:30 Paris en hiver)
+    # Tous les vendredis 05:30 UTC (~06:30 France hiver)
     - cron: "30 5 * * 5"
 
 permissions:
@@ -12,31 +13,57 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Python setup
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      # Install dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
-      - name: Build data/matches.json
+      # ----------------------------
+      # Build data pipeline
+      # ----------------------------
+      - name: Build data (scrape + geocode)
         run: |
+          echo "STEP 1 — Extract matches"
           python scripts/update_r1r3.py
 
-      - name: Commit & push if changed
+          echo "STEP 2 — Geocode missing clubs"
+          python scripts/geocode_missing_clubs.py
+
+          echo "STEP 3 — Rebuild matches with locations"
+          python scripts/update_r1r3.py
+
+      # ----------------------------
+      # Commit changes if any
+      # ----------------------------
+      - name: Commit & push changes
         run: |
           git config user.name "matchs-hdf-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/matches.json data/missing_clubs.json data/last_update.json data/debug_home_clubs.json
 
-          if git diff --cached --quiet; then
-            echo "No changes"
+          git add \
+            data/matches.json \
+            data/missing_clubs.json \
+            data/last_update.json \
+            data/club_locations.json \
+            data/debug_home_clubs.json
+
+          if git diff --cached --quiet
+          then
+            echo "No changes to commit"
           else
-            git commit -m "data: update R1/R2/R3"
+            git commit -m "data: auto update matches + geocode"
             git push
           fi
