@@ -1,74 +1,18 @@
-let map;
+// Rend les matchs accessibles dans la console
+window.allMatches = [];
 
-let CENTER = { lat: 49.848, lon: 3.287 }; // défaut Saint-Quentin
+let map;
+let CENTER = { lat: 49.848, lon: 3.287 }; // Saint-Quentin par défaut
 let RADIUS_KM = 60;
 let SELECTED_WEEKEND = null;
 
-// Ordre métier des compétitions (toujours dans cet ordre)
 const COMP_ORDER = ["N2", "N3", "R1", "R2", "R3", "CDF", "COUPE_LFHF"];
 let ACTIVE_COMPETITIONS = new Set();
 
-async function loadMatches() {
-  // 1) on lit le timestamp de mise à jour généré par l’action
-  let stamp = "0";
-  try {
-    const u = await fetch("data/last_update.json", { cache: "no-store" });
-    const uj = await u.json();
-    stamp = encodeURIComponent(uj.last_update || "0");
-  } catch (e) {
-    // si jamais last_update n’existe pas, on continue quand même
-    stamp = String(Date.now());
-  }
+const $ = (id) => document.getElementById(id);
 
-  // 2) on charge matches.json en ajoutant un paramètre -> plus de cache
-  const res = await fetch(`data/matches.json?v=${stamp}`, { cache: "no-store" });
-  const json = await res.json();
-  return json.matches || [];
-}
-
-
-async function loadGeocodes() {
-  const res = await fetch("data/geocodes-hdf.json");
-  return await res.json();
-}
-
-// ---------- Week-end (samedi du week-end du match) ----------
-function weekendIdFromKickoff(iso) {
-  // iso exemple: "2026-02-14T18:00:00+01:00"
-  const d = new Date(iso);
-
-  // getDay(): 0=dim,1=lun,...,6=sam
-  const dow = d.getDay();
-
-  // On veut le samedi du week-end "samedi+dimanche"
-  // - si c'est dimanche (0) -> samedi veille
-  // - sinon -> prochain samedi de la semaine
-  const diffToSaturday = (dow === 0) ? -1 : (6 - dow);
-
-  const sat = new Date(d);
-  sat.setDate(d.getDate() + diffToSaturday);
-  sat.setHours(0, 0, 0, 0);
-
-  // IMPORTANT: format local (pas toISOString)
-  const y = sat.getFullYear();
-  const m = String(sat.getMonth() + 1).padStart(2, "0");
-  const da = String(sat.getDate()).padStart(2, "0");
-  return `${y}-${m}-${da}`;
-}
-
-
-function labelWeekend(id) {
-  const [y, m, d] = id.split("-").map(Number);
-  const sat = new Date(y, m - 1, d);
-  const sun = new Date(y, m - 1, d + 1);
-  const fmt = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short" });
-  return `${fmt.format(sat)}–${fmt.format(sun)} ${y}`;
-}
-
-// ---------- Carte ----------
 function initMap() {
   map = L.map("map").setView([CENTER.lat, CENTER.lon], 10);
-
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap"
@@ -81,148 +25,76 @@ function clearMarkers() {
   });
 }
 
-// ---------- Affichage ----------
-function showMatches(matches) {
-  if (!map) return;
+// ✅ Calcul du samedi du week-end du match (sam+dim), en local (pas UTC)
+function weekendIdFromKickoff(iso) {
+  const d = new Date(iso);
+  const dow = d.getDay(); // 0 dim ... 6 sam
+  const diffToSaturday = (dow === 0) ? -1 : (6 - dow);
+  const sat = new Date(d);
+  sat.setDate(d.getDate() + diffToSaturday);
+  sat.setHours(0, 0, 0, 0);
 
-  clearMarkers();
+  const y = sat.getFullYear();
+  const m = String(sat.getMonth() + 1).padStart(2, "0");
+  const da = String(sat.getDate()).padStart(2, "0");
+  return `${y}-${m}-${da}`;
+}
 
-  const list = document.getElementById("list");
-  list.innerHTML = "";
+function labelWeekend(id) {
+  const [y, m, d] = id.split("-").map(Number);
+  const sat = new Date(y, m - 1, d);
+  const sun = new Date(y, m - 1, d + 1);
+  const fmt = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short" });
+  return `${fmt.format(sat)}–${fmt.format(sun)} ${y}`;
+}
 
-  // 1) filtre week-end
-  let filtered = SELECTED_WEEKEND
-    ? matches.filter(m => weekendIdFromKickoff(m.kickoff) === SELECTED_WEEKEND)
-    : matches;
+// Anti-cache basé sur last_update.json
+async function loadMatches() {
+  let stamp = String(Date.now());
+  try {
+    const u = await fetch("data/last_update.json", { cache: "no-store" });
+    const uj = await u.json();
+    stamp = encodeURIComponent(uj.last_update || stamp);
+  } catch (e) {
+    // ok
+  }
 
-  // 2) filtre compétitions
-  filtered = filtered.filter(m =>
-    ACTIVE_COMPETITIONS.size === 0 || ACTIVE_COMPETITIONS.has(m.competition)
-  );
+  const res = await fetch(`data/matches.json?v=${stamp}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`fetch matches.json failed: ${res.status}`);
+  const json = await res.json();
+  return json.matches || [];
+}
 
-  // 3) calc distance + filtre rayon + tri
-  const processed = filtered
-    .map(m => {
-      const d = haversineKm(CENTER.lat, CENTER.lon, m.venue.lat, m.venue.lon);
-      return { m, d };
-    })
-    .filter(o => o.d <= RADIUS_KM)
-    .sort((a, b) => a.d - b.d);
-
-  const bounds = [];
-
-  processed.forEach(({ m, d }) => {
-    // marqueur
-    L.marker([m.venue.lat, m.venue.lon])
-      .addTo(map)
-      .bindPopup(
-        `<b>${m.home} vs ${m.away}</b><br>${m.competition}<br>${m.venue.city}<br>${d.toFixed(1)} km`
-      );
-
-    bounds.push([m.venue.lat, m.venue.lon]);
-
-    // liste
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <b>${m.home}</b> vs <b>${m.away}</b><br>
-      ${m.competition} — ${m.venue.city}<br>
-      Distance : <b>${d.toFixed(1)} km</b>
-    `;
-    list.appendChild(div);
-  });
-
-  // auto-zoom sur les résultats
-  if (bounds.length > 0) {
-    map.fitBounds(bounds, { padding: [40, 40] });
-  } else {
-    map.setView([CENTER.lat, CENTER.lon], 10);
+async function loadGeocodes() {
+  try {
+    const res = await fetch("data/geocodes-hdf.json", { cache: "no-store" });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
   }
 }
 
-// ---------- UI ----------
-function bindSearch(geocodes, matches) {
-  const input = document.getElementById("q");
-  input.addEventListener("input", () => {
-    const q = input.value.trim().toLowerCase();
-    const found = geocodes.find(g =>
-      (g.q || "").toLowerCase() === q || (g.label || "").toLowerCase().includes(q)
-    );
-    if (!found) return;
+function buildWeekendSelect(matches) {
+  const select = $("weekend");
+  if (!select) return;
 
-    CENTER = { lat: found.lat, lon: found.lon };
-    map.setView([CENTER.lat, CENTER.lon], 10);
-    showMatches(matches);
-  });
-}
-
-function bindRadius(matches) {
-  const slider = document.getElementById("radius");
-  const label = document.getElementById("radiusValue");
-
-  RADIUS_KM = Number(slider.value);
-  label.textContent = slider.value;
-
-  slider.addEventListener("input", () => {
-    RADIUS_KM = Number(slider.value);
-    label.textContent = slider.value;
-    showMatches(matches);
-  });
-}
-
-function populateWeekendSelect(matches) {
-
-  const select = document.getElementById("weekendSelect");
-
-  // vide le menu
+  const ids = Array.from(new Set(matches.map(m => weekendIdFromKickoff(m.kickoff)))).sort();
   select.innerHTML = "";
 
-  // construit la liste unique des week-ends
-  const weekendSet = new Set();
-
-  matches.forEach(m => {
-    const id = weekendIdFromKickoff(m.kickoff);
-    weekendSet.add(id);
-  });
-
-  // tri chronologique
-  const weekends = Array.from(weekendSet).sort();
-
-  // injecte dans le menu
-  weekends.forEach(w => {
+  ids.forEach(id => {
     const opt = document.createElement("option");
-    opt.value = w;
-
-    const d = new Date(w);
-    opt.textContent =
-      d.toLocaleDateString("fr-FR", {
-        day: "2-digit",
-        month: "2-digit"
-      }) +
-      " week-end";
-
+    opt.value = id;
+    opt.textContent = labelWeekend(id);
     select.appendChild(opt);
   });
 
-  // sélectionne automatiquement le prochain week-end
-  if (weekends.length) {
-    select.value = weekends[0];
-  }
-}
-
-
-function bindWeekend(matches) {
-  const select = document.getElementById("weekend");
-  if (!select) return;
-
-  select.addEventListener("change", () => {
-    SELECTED_WEEKEND = select.value;
-    showMatches(matches);
-  });
+  SELECTED_WEEKEND = ids[0] || null;
+  if (SELECTED_WEEKEND) select.value = SELECTED_WEEKEND;
 }
 
 function buildCompetitionChips(matches) {
-  const wrap = document.getElementById("competitions");
+  const wrap = $("competitions");
   if (!wrap) return;
 
   wrap.innerHTML = "";
@@ -248,28 +120,111 @@ function buildCompetitionChips(matches) {
         ACTIVE_COMPETITIONS.add(code);
         b.classList.add("on");
       }
-      showMatches(matches);
+      showMatches(window.allMatches);
     };
 
     wrap.appendChild(b);
   });
 }
 
-// ---------- Start ----------
+function showMatches(matches) {
+  if (!map) return;
+
+  clearMarkers();
+  const list = $("list");
+  if (list) list.innerHTML = "";
+
+  const filtered = matches
+    .filter(m => !SELECTED_WEEKEND || weekendIdFromKickoff(m.kickoff) === SELECTED_WEEKEND)
+    .filter(m => ACTIVE_COMPETITIONS.size === 0 || ACTIVE_COMPETITIONS.has(m.competition))
+    .map(m => ({
+      m,
+      d: haversineKm(CENTER.lat, CENTER.lon, m.venue.lat, m.venue.lon)
+    }))
+    .filter(o => o.d <= RADIUS_KM)
+    .sort((a, b) => a.d - b.d);
+
+  const bounds = [];
+
+  filtered.forEach(({ m, d }) => {
+    L.marker([m.venue.lat, m.venue.lon])
+      .addTo(map)
+      .bindPopup(`<b>${m.home} vs ${m.away}</b><br>${m.competition} — ${m.venue.city}<br>${d.toFixed(1)} km`);
+
+    bounds.push([m.venue.lat, m.venue.lon]);
+
+    if (list) {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <b>${m.home}</b> vs <b>${m.away}</b><br>
+        ${m.competition} — ${m.venue.city}<br>
+        Distance : <b>${d.toFixed(1)} km</b>
+      `;
+      list.appendChild(div);
+    }
+  });
+
+  if (bounds.length) map.fitBounds(bounds, { padding: [40, 40] });
+  else map.setView([CENTER.lat, CENTER.lon], 10);
+}
+
+function bindUI(geocodes) {
+  const q = $("q");
+  if (q) {
+    q.addEventListener("input", () => {
+      const v = q.value.trim().toLowerCase();
+      const found = geocodes.find(g =>
+        (g.q || "").toLowerCase() === v || (g.label || "").toLowerCase().includes(v)
+      );
+      if (!found) return;
+      CENTER = { lat: found.lat, lon: found.lon };
+      map.setView([CENTER.lat, CENTER.lon], 10);
+      showMatches(window.allMatches);
+    });
+  }
+
+  const radius = $("radius");
+  const radiusValue = $("radiusValue");
+  if (radius && radiusValue) {
+    RADIUS_KM = Number(radius.value);
+    radiusValue.textContent = radius.value;
+    radius.addEventListener("input", () => {
+      RADIUS_KM = Number(radius.value);
+      radiusValue.textContent = radius.value;
+      showMatches(window.allMatches);
+    });
+  }
+
+  const weekend = $("weekend");
+  if (weekend) {
+    weekend.addEventListener("change", () => {
+      SELECTED_WEEKEND = weekend.value;
+      showMatches(window.allMatches);
+    });
+  }
+}
+
 async function start() {
   initMap();
 
-  const matches = await loadMatches();
-  const geocodes = await loadGeocodes();
+  try {
+    const matches = await loadMatches();
+    window.allMatches = matches;
+    console.log("Loaded matches:", matches.length);
 
-  buildWeekendSelect(matches);
-  buildCompetitionChips(matches);
+    const geocodes = await loadGeocodes();
 
-  showMatches(matches);
+    buildWeekendSelect(matches);
+    buildCompetitionChips(matches);
+    bindUI(geocodes);
 
-  bindSearch(geocodes, matches);
-  bindRadius(matches);
-  bindWeekend(matches);
+    showMatches(matches);
+  } catch (e) {
+    console.error(e);
+    alert("Erreur de chargement des matchs. Ouvre la console (F12) pour voir le détail.");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", start);
+
