@@ -343,5 +343,15 @@
     "city": "Vermelles",
     "lat": 50.4884634,
     "lon": 2.746528
+  },
+  "CHAMBLY OISE FC": {
+    "city": "Chambly",
+    "lat": 49.1662774,
+    "lon": 2.2444986
+  },
+  "LENS RC": {
+    "city": "Lens",
+    "lat": 50.4291723,
+    "lon": 2.8319805
   }
 }

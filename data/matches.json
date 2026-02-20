@@ -1,4 +1,243 @@
 {
   "season": "auto",
-  "matches": []
+  "matches": [
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-14T00:00:00+00:00",
+      "home": "MONTIGNY GOHELLE FC",
+      "away": "TOURCOING US",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/resultat",
+      "venue": {
+        "city": "Montigny-en-Gohelle",
+        "lat": 50.424,
+        "lon": 2.9393
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-14T00:00:00+00:00",
+      "home": "ROUBAIX RACING CLUB",
+      "away": "GRANDE SYNTHE O.",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/resultat",
+      "venue": {
+        "city": "Roubaix",
+        "lat": 50.6927,
+        "lon": 3.1746
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-14T00:00:00+00:00",
+      "home": "CALAIS RACING CLUB",
+      "away": "PAYS DE ST OMER US",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/resultat",
+      "venue": {
+        "city": "Calais",
+        "lat": 50.9513,
+        "lon": 1.8587
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-14T00:00:00+00:00",
+      "home": "LONGUEAU ESC",
+      "away": "PONT STE MAXENCE US",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/resultat",
+      "venue": {
+        "city": "Longueau",
+        "lat": 49.866,
+        "lon": 2.357
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-15T00:00:00+00:00",
+      "home": "LENS RC",
+      "away": "BOULOGNE S/MER USCO",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/resultat",
+      "venue": {
+        "city": "Lens",
+        "lat": 50.4291723,
+        "lon": 2.8319805
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-21T00:00:00+00:00",
+      "home": "MARCQ EN BAROEUL O.",
+      "away": "MONTIGNY GOHELLE FC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Marcq-en-Barœul",
+        "lat": 50.6764,
+        "lon": 3.0977
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-21T00:00:00+00:00",
+      "home": "GRANDE SYNTHE O.",
+      "away": "BOULOGNE S/MER USCO",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Grande-Synthe",
+        "lat": 51.0111,
+        "lon": 2.2992
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-21T00:00:00+00:00",
+      "home": "STEENVOORDE AS",
+      "away": "CALAIS RACING CLUB",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Steenvoorde",
+        "lat": 50.8106,
+        "lon": 2.5832
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-21T00:00:00+00:00",
+      "home": "ARRAS FA",
+      "away": "LONGUEAU ESC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Arras",
+        "lat": 50.291,
+        "lon": 2.777
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "GRAVELINES US",
+      "away": "LENS RC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Gravelines",
+        "lat": 50.986,
+        "lon": 2.128
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "PAYS DE ST OMER US",
+      "away": "BONDUES FC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Saint-Omer",
+        "lat": 50.7501,
+        "lon": 2.2602
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "BETHUNE STADE",
+      "away": "ROUBAIX RACING CLUB",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/1/calendrier",
+      "venue": {
+        "city": "Béthune",
+        "lat": 50.531,
+        "lon": 2.64
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "CAMON US",
+      "away": "VALENCIENNES FC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Camon",
+        "lat": 49.887,
+        "lon": 2.344
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "SOISSONS IFC",
+      "away": "CAMBRAI AC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Soissons",
+        "lat": 49.3817,
+        "lon": 3.3236
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "PONT STE MAXENCE US",
+      "away": "COMPIEGNE AFC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Pont-Sainte-Maxence",
+        "lat": 49.301,
+        "lon": 2.604
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "CHAMBLY OISE FC",
+      "away": "ST AMAND FC",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Chambly",
+        "lat": 49.1662774,
+        "lon": 2.2444986
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-02-22T00:00:00+00:00",
+      "home": "MAUBEUGE US",
+      "away": "ITANCOURT NEUVILLE",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Maubeuge",
+        "lat": 50.2779,
+        "lon": 3.9727
+      }
+    }
+  ]
 }
