@@ -1,25 +1,5 @@
 [
   {
-    "raw": "MONTIGNY GOHELLE FC",
-    "norm": "MONTIGNYGOHELLEFC"
-  },
-  {
-    "raw": "ROUBAIX RACING CLUB",
-    "norm": "ROUBAIXRACINGCLUB"
-  },
-  {
-    "raw": "CALAIS RACING CLUB",
-    "norm": "CALAISRACINGCLUB"
-  },
-  {
-    "raw": "LONGUEAU ESC",
-    "norm": "LONGUEAUESC"
-  },
-  {
-    "raw": "LENS RC",
-    "norm": "LENSRC"
-  },
-  {
     "raw": "MARCQ EN BAROEUL O.",
     "norm": "MARCQENBAROEULO"
   },
@@ -74,5 +54,61 @@
   {
     "raw": "MAUBEUGE US",
     "norm": "MAUBEUGEUS"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
+  },
+  {
+    "raw": "TOURCOING US",
+    "norm": "TOURCOINGUS"
+  },
+  {
+    "raw": "BOULOGNE S/MER USCO",
+    "norm": "BOULOGNESMERUSCO"
+  },
+  {
+    "raw": "LENS RC",
+    "norm": "LENSRC"
+  },
+  {
+    "raw": "BONDUES FC",
+    "norm": "BONDUESFC"
+  },
+  {
+    "raw": "ROUBAIX RACING CLUB",
+    "norm": "ROUBAIXRACINGCLUB"
+  },
+  {
+    "raw": "MONTIGNY GOHELLE FC",
+    "norm": "MONTIGNYGOHELLEFC"
+  },
+  {
+    "raw": "CALAIS RACING CLUB",
+    "norm": "CALAISRACINGCLUB"
+  },
+  {
+    "raw": "LAON US",
+    "norm": "LAONUS"
+  },
+  {
+    "raw": "COMPIEGNE AFC",
+    "norm": "COMPIEGNEAFC"
+  },
+  {
+    "raw": "VALENCIENNES FC",
+    "norm": "VALENCIENNESFC"
+  },
+  {
+    "raw": "CAMBRAI AC",
+    "norm": "CAMBRAIAC"
+  },
+  {
+    "raw": "LONGUEAU ESC",
+    "norm": "LONGUEAUESC"
+  },
+  {
+    "raw": "ST AMAND FC",
+    "norm": "STAMANDFC"
   }
 ]

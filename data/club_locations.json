@@ -353,5 +353,10 @@
     "city": "Lens",
     "lat": 50.4291723,
     "lon": 2.8319805
+  },
+  "VALENCIENNES FC": {
+    "city": "Valenciennes",
+    "lat": 50.3579317,
+    "lon": 3.5234846
   }
 }
