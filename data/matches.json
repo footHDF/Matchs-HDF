@@ -173,20 +173,6 @@
       "competition": "R1",
       "competition_label": "R1",
       "kickoff": "2026-03-07T00:00:00+00:00",
-      "home": "ITANCOURT NEUVILLE",
-      "away": "ARRAS FA",
-      "source": "API-DOFA",
-      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
-      "venue": {
-        "city": "Itancourt",
-        "lat": 49.804,
-        "lon": 3.335
-      }
-    },
-    {
-      "competition": "R1",
-      "competition_label": "R1",
-      "kickoff": "2026-03-08T00:00:00+00:00",
       "home": "TOURCOING US",
       "away": "GRANDE SYNTHE O.",
       "source": "API-DOFA",
@@ -195,6 +181,20 @@
         "city": "Tourcoing",
         "lat": 50.7239,
         "lon": 3.1612
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
+      "kickoff": "2026-03-07T00:00:00+00:00",
+      "home": "ITANCOURT NEUVILLE",
+      "away": "ARRAS FA",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Itancourt",
+        "lat": 49.804,
+        "lon": 3.335
       }
     },
     {

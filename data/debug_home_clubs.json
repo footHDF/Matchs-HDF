@@ -56,16 +56,16 @@
     "norm": "MAUBEUGEUS"
   },
   {
-    "raw": "ITANCOURT NEUVILLE",
-    "norm": "ITANCOURTNEUVILLE"
-  },
-  {
     "raw": "TOURCOING US",
     "norm": "TOURCOINGUS"
   },
   {
     "raw": "BOULOGNE S/MER USCO",
     "norm": "BOULOGNESMERUSCO"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
   },
   {
     "raw": "LENS RC",
