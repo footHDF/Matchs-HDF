@@ -1,61 +1,5 @@
 [
   {
-    "raw": "MARCQ EN BAROEUL O.",
-    "norm": "MARCQENBAROEULO"
-  },
-  {
-    "raw": "GRANDE SYNTHE O.",
-    "norm": "GRANDESYNTHEO"
-  },
-  {
-    "raw": "DUNKERQUE USL",
-    "norm": "DUNKERQUEUSL"
-  },
-  {
-    "raw": "STEENVOORDE AS",
-    "norm": "STEENVOORDEAS"
-  },
-  {
-    "raw": "ARRAS FA",
-    "norm": "ARRASFA"
-  },
-  {
-    "raw": "GRAVELINES US",
-    "norm": "GRAVELINESUS"
-  },
-  {
-    "raw": "PAYS DE ST OMER US",
-    "norm": "PAYSDESTOMERUS"
-  },
-  {
-    "raw": "BETHUNE STADE",
-    "norm": "BETHUNESTADE"
-  },
-  {
-    "raw": "CAMON US",
-    "norm": "CAMONUS"
-  },
-  {
-    "raw": "SOISSONS IFC",
-    "norm": "SOISSONSIFC"
-  },
-  {
-    "raw": "PONT STE MAXENCE US",
-    "norm": "PONTSTEMAXENCEUS"
-  },
-  {
-    "raw": "FEIGNIES/AULNOYE EFC",
-    "norm": "FEIGNIESAULNOYEEFC"
-  },
-  {
-    "raw": "CHAMBLY OISE FC",
-    "norm": "CHAMBLYOISEFC"
-  },
-  {
-    "raw": "MAUBEUGE US",
-    "norm": "MAUBEUGEUS"
-  },
-  {
     "raw": "TOURCOING US",
     "norm": "TOURCOINGUS"
   },
@@ -110,5 +54,53 @@
   {
     "raw": "ST AMAND FC",
     "norm": "STAMANDFC"
+  },
+  {
+    "raw": "MARCQ EN BAROEUL O.",
+    "norm": "MARCQENBAROEULO"
+  },
+  {
+    "raw": "GRAVELINES US",
+    "norm": "GRAVELINESUS"
+  },
+  {
+    "raw": "PAYS DE ST OMER US",
+    "norm": "PAYSDESTOMERUS"
+  },
+  {
+    "raw": "DUNKERQUE USL",
+    "norm": "DUNKERQUEUSL"
+  },
+  {
+    "raw": "STEENVOORDE AS",
+    "norm": "STEENVOORDEAS"
+  },
+  {
+    "raw": "BETHUNE STADE",
+    "norm": "BETHUNESTADE"
+  },
+  {
+    "raw": "FEIGNIES/AULNOYE EFC",
+    "norm": "FEIGNIESAULNOYEEFC"
+  },
+  {
+    "raw": "PONT STE MAXENCE US",
+    "norm": "PONTSTEMAXENCEUS"
+  },
+  {
+    "raw": "SOISSONS IFC",
+    "norm": "SOISSONSIFC"
+  },
+  {
+    "raw": "CHAMBLY OISE FC",
+    "norm": "CHAMBLYOISEFC"
+  },
+  {
+    "raw": "ARRAS FA",
+    "norm": "ARRASFA"
+  },
+  {
+    "raw": "MAUBEUGE US",
+    "norm": "MAUBEUGEUS"
   }
 ]
