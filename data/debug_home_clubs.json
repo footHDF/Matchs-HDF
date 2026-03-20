@@ -1,61 +1,5 @@
 [
   {
-    "raw": "TOURCOING US",
-    "norm": "TOURCOINGUS"
-  },
-  {
-    "raw": "BOULOGNE S/MER USCO",
-    "norm": "BOULOGNESMERUSCO"
-  },
-  {
-    "raw": "ITANCOURT NEUVILLE",
-    "norm": "ITANCOURTNEUVILLE"
-  },
-  {
-    "raw": "LENS RC",
-    "norm": "LENSRC"
-  },
-  {
-    "raw": "BONDUES FC",
-    "norm": "BONDUESFC"
-  },
-  {
-    "raw": "ROUBAIX RACING CLUB",
-    "norm": "ROUBAIXRACINGCLUB"
-  },
-  {
-    "raw": "MONTIGNY GOHELLE FC",
-    "norm": "MONTIGNYGOHELLEFC"
-  },
-  {
-    "raw": "CALAIS RACING CLUB",
-    "norm": "CALAISRACINGCLUB"
-  },
-  {
-    "raw": "LAON US",
-    "norm": "LAONUS"
-  },
-  {
-    "raw": "COMPIEGNE AFC",
-    "norm": "COMPIEGNEAFC"
-  },
-  {
-    "raw": "VALENCIENNES FC",
-    "norm": "VALENCIENNESFC"
-  },
-  {
-    "raw": "CAMBRAI AC",
-    "norm": "CAMBRAIAC"
-  },
-  {
-    "raw": "LONGUEAU ESC",
-    "norm": "LONGUEAUESC"
-  },
-  {
-    "raw": "ST AMAND FC",
-    "norm": "STAMANDFC"
-  },
-  {
     "raw": "MARCQ EN BAROEUL O.",
     "norm": "MARCQENBAROEULO"
   },
@@ -68,8 +12,16 @@
     "norm": "PAYSDESTOMERUS"
   },
   {
+    "raw": "LONGUEAU ESC",
+    "norm": "LONGUEAUESC"
+  },
+  {
     "raw": "DUNKERQUE USL",
     "norm": "DUNKERQUEUSL"
+  },
+  {
+    "raw": "CALAIS RACING CLUB",
+    "norm": "CALAISRACINGCLUB"
   },
   {
     "raw": "STEENVOORDE AS",
@@ -102,5 +54,17 @@
   {
     "raw": "MAUBEUGE US",
     "norm": "MAUBEUGEUS"
+  },
+  {
+    "raw": "CAMBRAI AC",
+    "norm": "CAMBRAIAC"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
+  },
+  {
+    "raw": "ST AMAND FC",
+    "norm": "STAMANDFC"
   }
 ]
