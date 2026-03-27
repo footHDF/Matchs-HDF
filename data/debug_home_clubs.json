@@ -1,29 +1,5 @@
 [
   {
-    "raw": "MARCQ EN BAROEUL O.",
-    "norm": "MARCQENBAROEULO"
-  },
-  {
-    "raw": "GRAVELINES US",
-    "norm": "GRAVELINESUS"
-  },
-  {
-    "raw": "PAYS DE ST OMER US",
-    "norm": "PAYSDESTOMERUS"
-  },
-  {
-    "raw": "LONGUEAU ESC",
-    "norm": "LONGUEAUESC"
-  },
-  {
-    "raw": "DUNKERQUE USL",
-    "norm": "DUNKERQUEUSL"
-  },
-  {
-    "raw": "CALAIS RACING CLUB",
-    "norm": "CALAISRACINGCLUB"
-  },
-  {
     "raw": "STEENVOORDE AS",
     "norm": "STEENVOORDEAS"
   },
@@ -32,32 +8,20 @@
     "norm": "BETHUNESTADE"
   },
   {
-    "raw": "FEIGNIES/AULNOYE EFC",
-    "norm": "FEIGNIESAULNOYEEFC"
+    "raw": "CAMBRAI AC",
+    "norm": "CAMBRAIAC"
   },
   {
-    "raw": "PONT STE MAXENCE US",
-    "norm": "PONTSTEMAXENCEUS"
-  },
-  {
-    "raw": "SOISSONS IFC",
-    "norm": "SOISSONSIFC"
-  },
-  {
-    "raw": "CHAMBLY OISE FC",
-    "norm": "CHAMBLYOISEFC"
-  },
-  {
-    "raw": "ARRAS FA",
-    "norm": "ARRASFA"
+    "raw": "DUNKERQUE USL",
+    "norm": "DUNKERQUEUSL"
   },
   {
     "raw": "MAUBEUGE US",
     "norm": "MAUBEUGEUS"
   },
   {
-    "raw": "CAMBRAI AC",
-    "norm": "CAMBRAIAC"
+    "raw": "ARRAS FA",
+    "norm": "ARRASFA"
   },
   {
     "raw": "ITANCOURT NEUVILLE",
@@ -66,5 +30,53 @@
   {
     "raw": "ST AMAND FC",
     "norm": "STAMANDFC"
+  },
+  {
+    "raw": "FEIGNIES/AULNOYE EFC",
+    "norm": "FEIGNIESAULNOYEEFC"
+  },
+  {
+    "raw": "BOULOGNE S/MER USCO",
+    "norm": "BOULOGNESMERUSCO"
+  },
+  {
+    "raw": "TOURCOING US",
+    "norm": "TOURCOINGUS"
+  },
+  {
+    "raw": "GRANDE SYNTHE O.",
+    "norm": "GRANDESYNTHEO"
+  },
+  {
+    "raw": "BONDUES FC",
+    "norm": "BONDUESFC"
+  },
+  {
+    "raw": "ROUBAIX RACING CLUB",
+    "norm": "ROUBAIXRACINGCLUB"
+  },
+  {
+    "raw": "MONTIGNY GOHELLE FC",
+    "norm": "MONTIGNYGOHELLEFC"
+  },
+  {
+    "raw": "LENS RC",
+    "norm": "LENSRC"
+  },
+  {
+    "raw": "VALENCIENNES FC",
+    "norm": "VALENCIENNESFC"
+  },
+  {
+    "raw": "CAMON US",
+    "norm": "CAMONUS"
+  },
+  {
+    "raw": "LAON US",
+    "norm": "LAONUS"
+  },
+  {
+    "raw": "COMPIEGNE AFC",
+    "norm": "COMPIEGNEAFC"
   }
 ]
