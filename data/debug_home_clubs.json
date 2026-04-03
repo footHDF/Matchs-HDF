@@ -1,47 +1,15 @@
 [
   {
-    "raw": "STEENVOORDE AS",
-    "norm": "STEENVOORDEAS"
-  },
-  {
-    "raw": "BETHUNE STADE",
-    "norm": "BETHUNESTADE"
-  },
-  {
-    "raw": "CAMBRAI AC",
-    "norm": "CAMBRAIAC"
-  },
-  {
-    "raw": "DUNKERQUE USL",
-    "norm": "DUNKERQUEUSL"
-  },
-  {
-    "raw": "MAUBEUGE US",
-    "norm": "MAUBEUGEUS"
-  },
-  {
-    "raw": "ARRAS FA",
-    "norm": "ARRASFA"
-  },
-  {
-    "raw": "ITANCOURT NEUVILLE",
-    "norm": "ITANCOURTNEUVILLE"
-  },
-  {
-    "raw": "ST AMAND FC",
-    "norm": "STAMANDFC"
-  },
-  {
-    "raw": "FEIGNIES/AULNOYE EFC",
-    "norm": "FEIGNIESAULNOYEEFC"
-  },
-  {
     "raw": "BOULOGNE S/MER USCO",
     "norm": "BOULOGNESMERUSCO"
   },
   {
     "raw": "TOURCOING US",
     "norm": "TOURCOINGUS"
+  },
+  {
+    "raw": "CAMBRAI AC",
+    "norm": "CAMBRAIAC"
   },
   {
     "raw": "GRANDE SYNTHE O.",
@@ -76,7 +44,63 @@
     "norm": "LAONUS"
   },
   {
+    "raw": "ST AMAND FC",
+    "norm": "STAMANDFC"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
+  },
+  {
     "raw": "COMPIEGNE AFC",
     "norm": "COMPIEGNEAFC"
+  },
+  {
+    "raw": "GRAVELINES US",
+    "norm": "GRAVELINESUS"
+  },
+  {
+    "raw": "MARCQ EN BAROEUL O.",
+    "norm": "MARCQENBAROEULO"
+  },
+  {
+    "raw": "LONGUEAU ESC",
+    "norm": "LONGUEAUESC"
+  },
+  {
+    "raw": "DUNKERQUE USL",
+    "norm": "DUNKERQUEUSL"
+  },
+  {
+    "raw": "BETHUNE STADE",
+    "norm": "BETHUNESTADE"
+  },
+  {
+    "raw": "STEENVOORDE AS",
+    "norm": "STEENVOORDEAS"
+  },
+  {
+    "raw": "CALAIS RACING CLUB",
+    "norm": "CALAISRACINGCLUB"
+  },
+  {
+    "raw": "MAUBEUGE US",
+    "norm": "MAUBEUGEUS"
+  },
+  {
+    "raw": "ARRAS FA",
+    "norm": "ARRASFA"
+  },
+  {
+    "raw": "FEIGNIES/AULNOYE EFC",
+    "norm": "FEIGNIESAULNOYEEFC"
+  },
+  {
+    "raw": "CHAMBLY OISE FC",
+    "norm": "CHAMBLYOISEFC"
+  },
+  {
+    "raw": "SOISSONS IFC",
+    "norm": "SOISSONSIFC"
   }
 ]
