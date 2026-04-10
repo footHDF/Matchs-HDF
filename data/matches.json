@@ -228,6 +228,20 @@
     {
       "competition": "R1",
       "competition_label": "R1",
+      "kickoff": "2026-04-11T00:00:00+00:00",
+      "home": "CHAMBLY OISE FC",
+      "away": "LAON US",
+      "source": "API-DOFA",
+      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
+      "venue": {
+        "city": "Chambly",
+        "lat": 49.1662774,
+        "lon": 2.2444986
+      }
+    },
+    {
+      "competition": "R1",
+      "competition_label": "R1",
       "kickoff": "2026-04-12T00:00:00+00:00",
       "home": "BETHUNE STADE",
       "away": "BOULOGNE S/MER USCO",
@@ -321,20 +335,6 @@
         "city": "Arras",
         "lat": 50.291,
         "lon": 2.777
-      }
-    },
-    {
-      "competition": "R1",
-      "competition_label": "R1",
-      "kickoff": "2026-04-12T00:00:00+00:00",
-      "home": "CHAMBLY OISE FC",
-      "away": "LAON US",
-      "source": "API-DOFA",
-      "source_url": "https://api-dofa.fff.fr/api/compets/439189/phases/1/poules/2/calendrier",
-      "venue": {
-        "city": "Chambly",
-        "lat": 49.1662774,
-        "lon": 2.2444986
       }
     },
     {

@@ -68,6 +68,10 @@
     "norm": "LONGUEAUESC"
   },
   {
+    "raw": "CHAMBLY OISE FC",
+    "norm": "CHAMBLYOISEFC"
+  },
+  {
     "raw": "DUNKERQUE USL",
     "norm": "DUNKERQUEUSL"
   },
@@ -94,10 +98,6 @@
   {
     "raw": "FEIGNIES/AULNOYE EFC",
     "norm": "FEIGNIESAULNOYEEFC"
-  },
-  {
-    "raw": "CHAMBLY OISE FC",
-    "norm": "CHAMBLYOISEFC"
   },
   {
     "raw": "SOISSONS IFC",
