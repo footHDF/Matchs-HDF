@@ -1,61 +1,5 @@
 [
   {
-    "raw": "BOULOGNE S/MER USCO",
-    "norm": "BOULOGNESMERUSCO"
-  },
-  {
-    "raw": "TOURCOING US",
-    "norm": "TOURCOINGUS"
-  },
-  {
-    "raw": "CAMBRAI AC",
-    "norm": "CAMBRAIAC"
-  },
-  {
-    "raw": "GRANDE SYNTHE O.",
-    "norm": "GRANDESYNTHEO"
-  },
-  {
-    "raw": "BONDUES FC",
-    "norm": "BONDUESFC"
-  },
-  {
-    "raw": "ROUBAIX RACING CLUB",
-    "norm": "ROUBAIXRACINGCLUB"
-  },
-  {
-    "raw": "MONTIGNY GOHELLE FC",
-    "norm": "MONTIGNYGOHELLEFC"
-  },
-  {
-    "raw": "LENS RC",
-    "norm": "LENSRC"
-  },
-  {
-    "raw": "VALENCIENNES FC",
-    "norm": "VALENCIENNESFC"
-  },
-  {
-    "raw": "CAMON US",
-    "norm": "CAMONUS"
-  },
-  {
-    "raw": "LAON US",
-    "norm": "LAONUS"
-  },
-  {
-    "raw": "ST AMAND FC",
-    "norm": "STAMANDFC"
-  },
-  {
-    "raw": "ITANCOURT NEUVILLE",
-    "norm": "ITANCOURTNEUVILLE"
-  },
-  {
-    "raw": "COMPIEGNE AFC",
-    "norm": "COMPIEGNEAFC"
-  },
-  {
     "raw": "GRAVELINES US",
     "norm": "GRAVELINESUS"
   },
@@ -84,12 +28,20 @@
     "norm": "STEENVOORDEAS"
   },
   {
+    "raw": "ROUBAIX RACING CLUB",
+    "norm": "ROUBAIXRACINGCLUB"
+  },
+  {
     "raw": "CALAIS RACING CLUB",
     "norm": "CALAISRACINGCLUB"
   },
   {
     "raw": "MAUBEUGE US",
     "norm": "MAUBEUGEUS"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
   },
   {
     "raw": "ARRAS FA",
@@ -102,5 +54,53 @@
   {
     "raw": "SOISSONS IFC",
     "norm": "SOISSONSIFC"
+  },
+  {
+    "raw": "BONDUES FC",
+    "norm": "BONDUESFC"
+  },
+  {
+    "raw": "GRANDE SYNTHE O.",
+    "norm": "GRANDESYNTHEO"
+  },
+  {
+    "raw": "VALENCIENNES FC",
+    "norm": "VALENCIENNESFC"
+  },
+  {
+    "raw": "COMPIEGNE AFC",
+    "norm": "COMPIEGNEAFC"
+  },
+  {
+    "raw": "LAON US",
+    "norm": "LAONUS"
+  },
+  {
+    "raw": "LENS RC",
+    "norm": "LENSRC"
+  },
+  {
+    "raw": "TOURCOING US",
+    "norm": "TOURCOINGUS"
+  },
+  {
+    "raw": "MONTIGNY GOHELLE FC",
+    "norm": "MONTIGNYGOHELLEFC"
+  },
+  {
+    "raw": "CAMBRAI AC",
+    "norm": "CAMBRAIAC"
+  },
+  {
+    "raw": "CAMON US",
+    "norm": "CAMONUS"
+  },
+  {
+    "raw": "ST AMAND FC",
+    "norm": "STAMANDFC"
+  },
+  {
+    "raw": "PONT STE MAXENCE US",
+    "norm": "PONTSTEMAXENCEUS"
   }
 ]
