@@ -1,67 +1,19 @@
 [
   {
-    "raw": "GRAVELINES US",
-    "norm": "GRAVELINESUS"
-  },
-  {
-    "raw": "MARCQ EN BAROEUL O.",
-    "norm": "MARCQENBAROEULO"
-  },
-  {
-    "raw": "LONGUEAU ESC",
-    "norm": "LONGUEAUESC"
-  },
-  {
-    "raw": "CHAMBLY OISE FC",
-    "norm": "CHAMBLYOISEFC"
-  },
-  {
-    "raw": "DUNKERQUE USL",
-    "norm": "DUNKERQUEUSL"
-  },
-  {
-    "raw": "BETHUNE STADE",
-    "norm": "BETHUNESTADE"
-  },
-  {
-    "raw": "STEENVOORDE AS",
-    "norm": "STEENVOORDEAS"
-  },
-  {
-    "raw": "ROUBAIX RACING CLUB",
-    "norm": "ROUBAIXRACINGCLUB"
-  },
-  {
-    "raw": "CALAIS RACING CLUB",
-    "norm": "CALAISRACINGCLUB"
-  },
-  {
-    "raw": "MAUBEUGE US",
-    "norm": "MAUBEUGEUS"
-  },
-  {
-    "raw": "ITANCOURT NEUVILLE",
-    "norm": "ITANCOURTNEUVILLE"
-  },
-  {
-    "raw": "ARRAS FA",
-    "norm": "ARRASFA"
-  },
-  {
-    "raw": "FEIGNIES/AULNOYE EFC",
-    "norm": "FEIGNIESAULNOYEEFC"
-  },
-  {
-    "raw": "SOISSONS IFC",
-    "norm": "SOISSONSIFC"
-  },
-  {
     "raw": "BONDUES FC",
     "norm": "BONDUESFC"
   },
   {
     "raw": "GRANDE SYNTHE O.",
     "norm": "GRANDESYNTHEO"
+  },
+  {
+    "raw": "GRAVELINES US",
+    "norm": "GRAVELINESUS"
+  },
+  {
+    "raw": "MONTIGNY GOHELLE FC",
+    "norm": "MONTIGNYGOHELLEFC"
   },
   {
     "raw": "VALENCIENNES FC",
@@ -84,8 +36,8 @@
     "norm": "TOURCOINGUS"
   },
   {
-    "raw": "MONTIGNY GOHELLE FC",
-    "norm": "MONTIGNYGOHELLEFC"
+    "raw": "STEENVOORDE AS",
+    "norm": "STEENVOORDEAS"
   },
   {
     "raw": "CAMBRAI AC",
@@ -102,5 +54,49 @@
   {
     "raw": "PONT STE MAXENCE US",
     "norm": "PONTSTEMAXENCEUS"
+  },
+  {
+    "raw": "BETHUNE STADE",
+    "norm": "BETHUNESTADE"
+  },
+  {
+    "raw": "LONGUEAU ESC",
+    "norm": "LONGUEAUESC"
+  },
+  {
+    "raw": "ARRAS FA",
+    "norm": "ARRASFA"
+  },
+  {
+    "raw": "ROUBAIX RACING CLUB",
+    "norm": "ROUBAIXRACINGCLUB"
+  },
+  {
+    "raw": "CALAIS RACING CLUB",
+    "norm": "CALAISRACINGCLUB"
+  },
+  {
+    "raw": "DUNKERQUE USL",
+    "norm": "DUNKERQUEUSL"
+  },
+  {
+    "raw": "MARCQ EN BAROEUL O.",
+    "norm": "MARCQENBAROEULO"
+  },
+  {
+    "raw": "FEIGNIES/AULNOYE EFC",
+    "norm": "FEIGNIESAULNOYEEFC"
+  },
+  {
+    "raw": "CHAMBLY OISE FC",
+    "norm": "CHAMBLYOISEFC"
+  },
+  {
+    "raw": "MAUBEUGE US",
+    "norm": "MAUBEUGEUS"
+  },
+  {
+    "raw": "ITANCOURT NEUVILLE",
+    "norm": "ITANCOURTNEUVILLE"
   }
 ]
